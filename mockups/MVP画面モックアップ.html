@@ -1,0 +1,517 @@
+<title>オーダーマイスター MVP画面モックアップ</title>
+<style>
+  :root {
+    --page: #f7f5f1;
+    --ink-1: #171614;
+    --ink-2: #504e48;
+    --ink-muted: #8b887e;
+    --hairline: #e2dfd6;
+    --wrap-accent: #8a4a12;
+    --wrap-wash: #f1e9de;
+    --surface: #fdfcfa;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --page: #121110;
+      --ink-1: #f2f0ea;
+      --ink-2: #b8b5ab;
+      --ink-muted: #85827a;
+      --hairline: #2c2a26;
+      --wrap-accent: #d99a55;
+      --wrap-wash: #241b11;
+      --surface: #1b1a18;
+    }
+  }
+  :root[data-theme="dark"] {
+    --page: #121110; --ink-1: #f2f0ea; --ink-2: #b8b5ab; --ink-muted: #85827a;
+    --hairline: #2c2a26; --wrap-accent: #d99a55; --wrap-wash: #241b11; --surface: #1b1a18;
+  }
+  :root[data-theme="light"] {
+    --page: #f7f5f1; --ink-1: #171614; --ink-2: #504e48; --ink-muted: #8b887e;
+    --hairline: #e2dfd6; --wrap-accent: #8a4a12; --wrap-wash: #f1e9de; --surface: #fdfcfa;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    background: var(--page); color: var(--ink-1);
+    font-family: "Yu Gothic UI", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
+    line-height: 1.7; margin: 0;
+  }
+  .shell { max-width: 1100px; margin: 0 auto; padding: 56px 24px 90px; }
+
+  .eyebrow { font-size: 12px; font-weight: 700; letter-spacing: 0.13em; color: var(--wrap-accent); margin: 0 0 10px; }
+  h1 { font-size: 30px; font-weight: 700; line-height: 1.4; margin: 0 0 8px; text-wrap: balance; }
+  .intro { font-size: 14.5px; color: var(--ink-2); max-width: 62ch; margin: 0 0 8px; }
+  .meta { font-size: 12.5px; color: var(--ink-muted); margin-bottom: 40px; padding-bottom: 24px; border-bottom: 1px solid var(--hairline); }
+
+  section { margin-bottom: 72px; }
+  h2 { font-size: 20px; font-weight: 700; margin: 0 0 4px; }
+  .sec-sub { font-size: 13px; color: var(--ink-muted); margin: 0 0 28px; }
+
+  .stage { display: flex; gap: 40px; align-items: flex-start; flex-wrap: wrap; }
+  .annos { flex: 1; min-width: 260px; display: flex; flex-direction: column; gap: 14px; position: sticky; top: 24px; }
+  .anno {
+    background: var(--surface); border: 1px solid var(--hairline); border-radius: 10px;
+    padding: 14px 18px;
+  }
+  .anno .a-tag {
+    display: inline-block; font-size: 10.5px; font-weight: 700; letter-spacing: 0.06em;
+    color: var(--wrap-accent); background: var(--wrap-wash); border-radius: 4px;
+    padding: 1px 8px; margin-bottom: 6px;
+  }
+  .anno h4 { font-size: 13.5px; font-weight: 700; margin: 0 0 4px; }
+  .anno p { font-size: 12.5px; color: var(--ink-2); margin: 0; }
+
+  /* ============ PHONE FRAME ============ */
+  .phone {
+    width: 375px; flex-shrink: 0;
+    border-radius: 38px; border: 10px solid #26231f;
+    background: #26231f;
+    box-shadow: 0 24px 60px rgba(20,15,8,0.25);
+    overflow: hidden;
+  }
+  .phone .screen { background: #faf7f2; border-radius: 28px; overflow: hidden; height: 740px; display: flex; flex-direction: column; }
+  .phone .scroll { overflow-y: auto; flex: 1; }
+
+  /* 製品UIは意図的にライト固定（店頭で使う実UIの再現） */
+  .store-head {
+    background: #201d1a; color: #f5efe6; padding: 22px 20px 18px;
+  }
+  .store-head .s-name {
+    font-family: "Yu Mincho", "Hiragino Mincho ProN", serif;
+    font-size: 22px; font-weight: 600; letter-spacing: 0.06em; margin: 0 0 2px;
+  }
+  .store-head .s-cap { font-size: 11px; color: #c9bfae; letter-spacing: 0.04em; }
+  .direct-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: #d94f2b; color: #fff; font-size: 11px; font-weight: 700;
+    border-radius: 999px; padding: 3px 12px; margin-top: 10px; letter-spacing: 0.03em;
+  }
+  .mode-tabs { display: flex; background: #efe9df; padding: 6px; gap: 6px; margin: 14px 16px 0; border-radius: 12px; }
+  .mode-tab {
+    flex: 1; text-align: center; font-size: 13px; font-weight: 700; color: #6f6a5f;
+    padding: 9px 0; border-radius: 8px; border: none; background: transparent; cursor: pointer;
+    font-family: inherit;
+  }
+  .mode-tab.on { background: #fff; color: #201d1a; box-shadow: 0 1px 4px rgba(30,20,10,0.12); }
+  .slot-row { display: flex; gap: 8px; padding: 12px 16px 4px; overflow-x: auto; }
+  .slot {
+    flex-shrink: 0; font-size: 12px; font-weight: 600; color: #55514a;
+    border: 1px solid #ddd6c9; border-radius: 999px; padding: 6px 14px; background: #fff; cursor: pointer;
+    font-family: inherit;
+  }
+  .slot.on { background: #201d1a; color: #fff; border-color: #201d1a; }
+
+  .menu-sec { padding: 14px 16px 4px; }
+  .menu-sec h5 {
+    font-size: 12px; font-weight: 700; letter-spacing: 0.1em; color: #9a9488;
+    margin: 0 0 10px;
+  }
+  .m-item {
+    display: flex; gap: 12px; align-items: center;
+    background: #fff; border: 1px solid #eae4d8; border-radius: 14px;
+    padding: 10px; margin-bottom: 10px;
+  }
+  .m-thumb {
+    width: 62px; height: 62px; border-radius: 10px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center; font-size: 30px;
+    background: linear-gradient(135deg, #f6e8d8, #efd9bd);
+  }
+  .m-body { flex: 1; min-width: 0; }
+  .m-name { font-size: 14px; font-weight: 700; color: #201d1a; margin: 0; }
+  .m-desc { font-size: 11px; color: #8b857a; margin: 1px 0 3px; line-height: 1.45; }
+  .m-price { font-size: 13.5px; font-weight: 700; color: #201d1a; font-variant-numeric: tabular-nums; }
+  .m-add {
+    width: 34px; height: 34px; border-radius: 50%; border: none; cursor: pointer;
+    background: #d94f2b; color: #fff; font-size: 20px; font-weight: 700; line-height: 1;
+    flex-shrink: 0; font-family: inherit;
+  }
+  .m-add:active { transform: scale(0.94); }
+  .soldout { opacity: 0.45; }
+  .soldout .m-add { background: #c8c2b6; cursor: default; }
+
+  .cart-bar {
+    background: #201d1a; padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
+  }
+  .cart-btn {
+    width: 100%; border: none; border-radius: 12px; cursor: pointer;
+    background: #d94f2b; color: #fff; font-size: 15px; font-weight: 700;
+    padding: 14px; display: flex; justify-content: space-between; align-items: center;
+    font-family: inherit;
+  }
+  .cart-btn .c-count {
+    background: rgba(255,255,255,0.25); border-radius: 6px; padding: 1px 9px; font-size: 13px;
+  }
+  .cart-btn .c-total { font-variant-numeric: tabular-nums; }
+
+  /* ============ DASHBOARD FRAME ============ */
+  .browser {
+    flex: 1; min-width: 560px;
+    border-radius: 12px; border: 1px solid var(--hairline);
+    box-shadow: 0 18px 50px rgba(20,15,8,0.16);
+    overflow: hidden; background: #f4f1ea;
+  }
+  .browser .bar {
+    background: #e6e1d5; padding: 9px 14px; display: flex; align-items: center; gap: 8px;
+  }
+  .browser .dot { width: 10px; height: 10px; border-radius: 50%; background: #cbc4b4; }
+  .browser .url {
+    flex: 1; background: #fff; border-radius: 6px; font-size: 11px; color: #8b857a;
+    padding: 3px 12px; margin-left: 8px;
+  }
+  .dash { padding: 24px 26px 28px; color: #201d1a; font-size: 13px; }
+  .dash-head { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; }
+  .dash-head h3 { font-size: 17px; font-weight: 700; margin: 0; }
+  .dash-head .d-store { font-size: 12px; color: #8b857a; }
+
+  .hero-stat {
+    background: #1a7f4e; color: #fff; border-radius: 14px;
+    padding: 20px 24px; margin-bottom: 14px;
+    display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px;
+  }
+  .hero-stat .h-label { font-size: 12px; font-weight: 700; letter-spacing: 0.05em; opacity: 0.9; margin-bottom: 2px; }
+  .hero-stat .h-num { font-size: 34px; font-weight: 800; line-height: 1.1; font-variant-numeric: tabular-nums; }
+  .hero-stat .h-sub { font-size: 11.5px; opacity: 0.85; margin-top: 4px; }
+  .hero-calc { font-size: 12px; line-height: 1.9; background: rgba(255,255,255,0.14); border-radius: 10px; padding: 10px 16px; font-variant-numeric: tabular-nums; }
+
+  .kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 14px; }
+  .kpi {
+    background: #fff; border: 1px solid #e7e1d4; border-radius: 10px; padding: 12px 14px;
+  }
+  .kpi .k-label { font-size: 10.5px; font-weight: 700; color: #9a9488; letter-spacing: 0.05em; }
+  .kpi .k-num { font-size: 19px; font-weight: 800; font-variant-numeric: tabular-nums; margin-top: 2px; }
+  .kpi .k-delta { font-size: 10.5px; font-weight: 700; color: #1a7f4e; }
+  .kpi .k-delta.flat { color: #9a9488; }
+
+  .dash-cols { display: flex; gap: 12px; }
+  .dash-col { flex: 1; min-width: 0; }
+  .panel { background: #fff; border: 1px solid #e7e1d4; border-radius: 12px; padding: 14px 16px; margin-bottom: 12px; }
+  .panel h6 { font-size: 11.5px; font-weight: 700; color: #6f6a5f; letter-spacing: 0.06em; margin: 0 0 10px; }
+
+  .chart { display: flex; align-items: flex-end; gap: 10px; height: 110px; padding-top: 4px; }
+  .cbar { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; height: 100%; justify-content: flex-end; }
+  .cbar .b { width: 100%; border-radius: 4px 4px 0 0; background: #e8c9a8; }
+  .cbar.cur .b { background: #d94f2b; }
+  .cbar .b-label { font-size: 9.5px; color: #9a9488; }
+  .cbar .b-val { font-size: 9px; color: #6f6a5f; font-variant-numeric: tabular-nums; }
+
+  .ai-note {
+    background: #fdf3e4; border: 1px solid #ecd9b8; border-radius: 10px;
+    padding: 11px 14px; font-size: 11.5px; line-height: 1.75; color: #55514a;
+  }
+  .ai-note b { color: #201d1a; }
+  .ai-note .ai-chip {
+    display: inline-block; font-size: 9.5px; font-weight: 700; color: #8a4a12;
+    background: #f3e2c8; border-radius: 4px; padding: 0 6px; margin-right: 6px;
+  }
+
+  .order-list { width: 100%; border-collapse: collapse; }
+  .order-list td { font-size: 11.5px; padding: 6px 4px; border-bottom: 1px solid #f0ebe0; }
+  .order-list tr:last-child td { border-bottom: none; }
+  .o-id { color: #9a9488; font-variant-numeric: tabular-nums; }
+  .o-amt { text-align: right; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .pill { display: inline-block; font-size: 9.5px; font-weight: 700; border-radius: 999px; padding: 1px 8px; }
+  .pill.new { background: #fdeae3; color: #c33d1a; }
+  .pill.cook { background: #fdf3e4; color: #a3690e; }
+  .pill.done { background: #e2f2e9; color: #1a7f4e; }
+
+  .repeat-bar { display: flex; height: 10px; border-radius: 999px; overflow: hidden; margin: 6px 0 4px; }
+  .repeat-bar .seg-r { background: #d94f2b; }
+  .repeat-bar .seg-n { background: #e8c9a8; }
+  .legend { font-size: 10.5px; color: #6f6a5f; display: flex; gap: 12px; }
+  .legend i { display: inline-block; width: 8px; height: 8px; border-radius: 2px; margin-right: 4px; }
+
+  /* LINE notify */
+  .line-card {
+    width: 320px; border-radius: 16px; overflow: hidden; flex-shrink: 0;
+    border: 1px solid var(--hairline); box-shadow: 0 14px 36px rgba(20,15,8,0.14);
+    background: #7d94ab;
+  }
+  .line-card .lc-head { background: rgba(0,0,0,0.25); color: #fff; font-size: 12px; font-weight: 700; padding: 8px 14px; }
+  .line-card .lc-body { padding: 14px; }
+  .bubble {
+    background: #fff; border-radius: 4px 14px 14px 14px; padding: 12px 14px;
+    font-size: 12px; line-height: 1.8; color: #201d1a;
+  }
+  .bubble .b-from { font-size: 10.5px; color: #8b857a; margin-bottom: 8px; }
+  .bubble b.o-head { font-size: 13px; }
+  .bubble .b-btns { display: flex; gap: 8px; margin-top: 10px; }
+  .bubble .b-btn {
+    flex: 1; text-align: center; font-size: 11.5px; font-weight: 700;
+    border: 1px solid #d94f2b; color: #d94f2b; border-radius: 8px; padding: 7px 0;
+  }
+  .bubble .b-btn.pri { background: #d94f2b; color: #fff; }
+
+  footer { margin-top: 30px; padding-top: 18px; border-top: 1px solid var(--hairline); font-size: 11.5px; color: var(--ink-muted); }
+
+  @media (max-width: 900px) {
+    .browser { min-width: 0; }
+    .kpi-row { grid-template-columns: repeat(2, 1fr); }
+    .dash-cols { flex-direction: column; }
+    .annos { position: static; }
+  }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<div class="shell">
+  <p class="eyebrow">オーダーマイスター（仮称）｜MVP画面モックアップ</p>
+  <h1>「手数料ゼロの直販注文」と「円建て成果ダッシュボード」</h1>
+  <p class="intro">MVPの中核2画面＋店舗通知のデザインモック。左のスマホは実際に「＋」でカートに追加できます。データはすべて架空のサンプル店舗「からあげ・お弁当 まる福」のものです。</p>
+  <p class="meta">要件定義書 docs/03 の機能ID（C=顧客側・S=店舗側）に対応 ｜ 2026-07-14 ｜ 社内レビュー・営業デモ用</p>
+
+  <!-- ============ 顧客側 ============ -->
+  <section>
+    <h2>画面1｜顧客側：スマホ注文ページ</h2>
+    <p class="sec-sub">店のサイト・Googleマップ・SNSから遷移する注文の入口（C1〜C7）</p>
+    <div class="stage">
+      <div class="phone">
+        <div class="screen">
+          <div class="scroll">
+            <div class="store-head">
+              <p class="s-name">からあげ・お弁当 まる福</p>
+              <div class="s-cap">上町商店街 徒歩3分 ｜ 本日 11:00–20:00</div>
+              <div class="direct-badge">お店に直接注文 — 手数料0円</div>
+            </div>
+            <div class="mode-tabs">
+              <button class="mode-tab on" id="tabTakeout">テイクアウト</button>
+              <button class="mode-tab" id="tabDelivery">デリバリー（お店が配達）</button>
+            </div>
+            <div class="slot-row" aria-label="受け取り時間">
+              <button class="slot on">最短 12:15</button>
+              <button class="slot">12:30</button>
+              <button class="slot">12:45</button>
+              <button class="slot">13:00</button>
+              <button class="slot">13:15</button>
+            </div>
+            <div class="menu-sec">
+              <h5>人気ベスト3</h5>
+              <div class="m-item">
+                <div class="m-thumb">🍱</div>
+                <div class="m-body">
+                  <p class="m-name">特製からあげ弁当（5個入）</p>
+                  <p class="m-desc">秘伝の醤油だれに一晩漬けた鶏もも。ごはん大盛り無料</p>
+                  <span class="m-price">¥880</span>
+                </div>
+                <button class="m-add" data-price="880" aria-label="カートに追加">＋</button>
+              </div>
+              <div class="m-item">
+                <div class="m-thumb">🍗</div>
+                <div class="m-body">
+                  <p class="m-name">からあげ単品（10個）</p>
+                  <p class="m-desc">パーティーサイズ。レモン・柚子胡椒つき</p>
+                  <span class="m-price">¥1,180</span>
+                </div>
+                <button class="m-add" data-price="1180" aria-label="カートに追加">＋</button>
+              </div>
+              <div class="m-item">
+                <div class="m-thumb">🍙</div>
+                <div class="m-body">
+                  <p class="m-name">日替わりおむすびセット</p>
+                  <p class="m-desc">おむすび2個＋からあげ2個＋お新香</p>
+                  <span class="m-price">¥580</span>
+                </div>
+                <button class="m-add" data-price="580" aria-label="カートに追加">＋</button>
+              </div>
+            </div>
+            <div class="menu-sec">
+              <h5>お弁当</h5>
+              <div class="m-item">
+                <div class="m-thumb">🐟</div>
+                <div class="m-body">
+                  <p class="m-name">サバの塩焼き弁当</p>
+                  <p class="m-desc">脂ののった金華サバ使用</p>
+                  <span class="m-price">¥980</span>
+                </div>
+                <button class="m-add" data-price="980" aria-label="カートに追加">＋</button>
+              </div>
+              <div class="m-item soldout">
+                <div class="m-thumb">🥩</div>
+                <div class="m-body">
+                  <p class="m-name">生姜焼き弁当 <span class="pill cook" style="margin-left:4px;">本日売切</span></p>
+                  <p class="m-desc">国産豚ロース使用</p>
+                  <span class="m-price">¥920</span>
+                </div>
+                <button class="m-add" aria-label="売切" disabled>＋</button>
+              </div>
+              <div class="m-item">
+                <div class="m-thumb">🥤</div>
+                <div class="m-body">
+                  <p class="m-name">自家製レモネード</p>
+                  <p class="m-desc">テイクアウトカップ 400ml</p>
+                  <span class="m-price">¥350</span>
+                </div>
+                <button class="m-add" data-price="350" aria-label="カートに追加">＋</button>
+              </div>
+            </div>
+            <div style="padding: 6px 16px 18px;">
+              <p style="font-size:10.5px; color:#9a9488; line-height:1.7; margin:0;">支払い：クレジットカード（事前決済）／店頭払い ｜ 会員登録不要・お名前と電話番号だけでご注文いただけます</p>
+            </div>
+          </div>
+          <div class="cart-bar">
+            <button class="cart-btn" id="cartBtn">
+              <span class="c-count"><span id="cartCount">2</span>点</span>
+              <span>注文へ進む</span>
+              <span class="c-total">¥<span id="cartTotal">1,760</span></span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="annos">
+        <div class="anno"><span class="a-tag">C1・C2</span><h4>スマホ最適・オプション対応メニュー</h4><p>店のサイト/Googleマップ/SNSのリンクから直接この画面へ。写真・説明文はAIメニュー作成支援（S2）で自動生成。</p></div>
+        <div class="anno"><span class="a-tag">C3・C4</span><h4>テイクアウト／自店配達の切替</h4><p>受け取り時間枠は店の設定から自動生成。デリバリータブでは配達エリア判定・最低注文額・配達料を適用。</p></div>
+        <div class="anno"><span class="a-tag">C5・C7</span><h4>Stripe事前決済＋ゲスト注文</h4><p>会員登録不要（名前＋電話番号のみ）で離脱を防ぐ。売上は店舗のStripeアカウントへ直接入金。</p></div>
+        <div class="anno"><span class="a-tag">差別化</span><h4>「手数料0円」を顧客にも見せる</h4><p>ヘッダーのバッジが「ポータルより店に直接頼むほうが店の応援になる」ことを伝え、直販への行動変容を促す。</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 店舗側ダッシュボード ============ -->
+  <section>
+    <h2>画面2｜店舗側：円建て成果ダッシュボード</h2>
+    <p class="sec-sub">本商品の魂。「節約額 &gt; 月額費」を毎月証明する画面（S7〜S9）</p>
+    <div class="stage">
+      <div class="browser">
+        <div class="bar">
+          <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+          <span class="url">order-meister.jp/dashboard ｜ からあげ・お弁当 まる福</span>
+        </div>
+        <div class="dash">
+          <div class="dash-head">
+            <h3>今月の成果 <span style="font-weight:600; color:#8b857a; font-size:13px;">2026年7月（14日時点）</span></h3>
+            <span class="d-store">前月レポートPDF ↓ ｜ 設定</span>
+          </div>
+
+          <div class="hero-stat">
+            <div>
+              <div class="h-label">ポータルに払わずに済んだ金額（今月の節約額）</div>
+              <div class="h-num">¥68,294</div>
+              <div class="h-sub">累計節約額 ¥312,580（導入から5ヶ月）</div>
+            </div>
+            <div class="hero-calc">
+              直販売上 ¥312,400 × 手数料35%換算 …… ¥109,340<br>
+              実際のコスト（月額＋決済手数料） …… ▲¥41,046<br>
+              <b>差引 …… ＋¥68,294</b>
+            </div>
+          </div>
+
+          <div class="kpi-row">
+            <div class="kpi"><div class="k-label">直販売上</div><div class="k-num">¥312,400</div><div class="k-delta">前月比 +12.4%</div></div>
+            <div class="kpi"><div class="k-label">注文件数</div><div class="k-num">142件</div><div class="k-delta">+9件</div></div>
+            <div class="kpi"><div class="k-label">客単価</div><div class="k-num">¥2,200</div><div class="k-delta flat">±0</div></div>
+            <div class="kpi"><div class="k-label">顧客リスト（店の資産）</div><div class="k-num">486人</div><div class="k-delta">+52人</div></div>
+          </div>
+
+          <div class="dash-cols">
+            <div class="dash-col">
+              <div class="panel">
+                <h6>直販売上の推移（6ヶ月）</h6>
+                <div class="chart">
+                  <div class="cbar"><span class="b-val">18.2</span><div class="b" style="height:34%;"></div><span class="b-label">2月</span></div>
+                  <div class="cbar"><span class="b-val">21.5</span><div class="b" style="height:41%;"></div><span class="b-label">3月</span></div>
+                  <div class="cbar"><span class="b-val">24.8</span><div class="b" style="height:48%;"></div><span class="b-label">4月</span></div>
+                  <div class="cbar"><span class="b-val">26.1</span><div class="b" style="height:51%;"></div><span class="b-label">5月</span></div>
+                  <div class="cbar"><span class="b-val">27.8</span><div class="b" style="height:55%;"></div><span class="b-label">6月</span></div>
+                  <div class="cbar cur"><span class="b-val">31.2</span><div class="b" style="height:62%;"></div><span class="b-label">7月</span></div>
+                </div>
+                <p style="font-size:10px; color:#9a9488; margin:6px 0 0;">単位：万円 ｜ 7月は14日時点</p>
+              </div>
+              <div class="panel">
+                <h6>新規とリピートの内訳</h6>
+                <div class="repeat-bar">
+                  <div class="seg-r" style="width:73%;"></div>
+                  <div class="seg-n" style="width:27%;"></div>
+                </div>
+                <div class="legend">
+                  <span><i style="background:#d94f2b;"></i>リピート 104件（73%）</span>
+                  <span><i style="background:#e8c9a8;"></i>新規 38件（27%）</span>
+                </div>
+              </div>
+            </div>
+            <div class="dash-col">
+              <div class="panel">
+                <h6>新しい注文</h6>
+                <table class="order-list">
+                  <tr><td class="o-id">#1043</td><td>からあげ弁当 ×2 ほか</td><td><span class="pill new">新規受付</span></td><td class="o-amt">¥2,110</td></tr>
+                  <tr><td class="o-id">#1042</td><td>おむすびセット ×3</td><td><span class="pill cook">調理中</span></td><td class="o-amt">¥1,740</td></tr>
+                  <tr><td class="o-id">#1041</td><td>からあげ単品10個 ×1</td><td><span class="pill cook">調理中</span></td><td class="o-amt">¥1,180</td></tr>
+                  <tr><td class="o-id">#1040</td><td>サバ塩焼き弁当 ×2（配達）</td><td><span class="pill done">受け渡し済み</span></td><td class="o-amt">¥2,460</td></tr>
+                </table>
+              </div>
+              <div class="ai-note">
+                <span class="ai-chip">AI所見</span><b>リピート率が3ヶ月連続で上昇しています（68%→73%）。</b>金曜12時台の注文が受け取り枠の上限に達する日が増えています。金曜のみ12:00〜13:00の枠を2件増やすと、機会損失（推定 月¥18,000）を回収できる見込みです。
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="annos">
+        <div class="anno"><span class="a-tag">S7</span><h4>節約額を最上段に、緑で</h4><p>「このシステムは費用ではなく利益源」という一点を毎回最初に伝える。計算式もその場で見せて信頼をつくる。</p></div>
+        <div class="anno"><span class="a-tag">S9</span><h4>顧客リスト＝店の資産</h4><p>ポータルが渡さない顧客情報が毎月積み上がる様子をKPIとして常時表示。Phase 2のAIリピート促進の布石。</p></div>
+        <div class="anno"><span class="a-tag">S8</span><h4>AI所見つき月次レポート</h4><p>数字の羅列でなく「次の一手」をAIが日本語で提案。月次PDFにも同じ所見が載り、店主が読む理由をつくる。</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ LINE通知 ============ -->
+  <section>
+    <h2>画面3｜店舗への注文通知（LINE）</h2>
+    <p class="sec-sub">新しい端末・アプリを覚えさせない。店主が毎日見ているLINEに届く（S3）</p>
+    <div class="stage">
+      <div class="line-card">
+        <div class="lc-head">オーダーマイスター 通知</div>
+        <div class="lc-body">
+          <div class="bubble">
+            <div class="b-from">オーダーマイスター ｜ 12:04</div>
+            <b class="o-head">🔔 新しい注文 #1043</b><br>
+            テイクアウト ｜ 12:15 受け取り<br>
+            ・特製からあげ弁当 ×2<br>
+            ・自家製レモネード ×1<br>
+            合計 <b>¥2,110</b>（カード決済済み）<br>
+            山田様 ｜ 090-****-1234
+            <div class="b-btns">
+              <span class="b-btn pri">受け付ける</span>
+              <span class="b-btn">詳細を見る</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="annos">
+        <div class="anno"><span class="a-tag">S3</span><h4>受注操作もLINEで完結</h4><p>「受け付ける」でステータスが自動更新され、お客様にも確認通知が飛ぶ。忙しい厨房でも片手で処理できる。</p></div>
+        <div class="anno"><span class="a-tag">運用設計</span><h4>管理画面は「見たいとき」だけ</h4><p>日々の受注はLINE、集計と成果確認はダッシュボード、という役割分担でITリテラシーの低い店主でも運用が続く。</p></div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    オーダーマイスター（仮称）MVP画面モックアップ ｜ Overseas AI agents プロジェクト ｜ 画面・数値はすべて架空のサンプルです
+  </footer>
+</div>
+
+<script>
+(function () {
+  var count = 2, total = 1760;
+  var fmt = function (n) { return n.toLocaleString('ja-JP'); };
+  document.querySelectorAll('.m-add[data-price]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      count += 1; total += parseInt(btn.dataset.price, 10);
+      document.getElementById('cartCount').textContent = count;
+      document.getElementById('cartTotal').textContent = fmt(total);
+    });
+  });
+  var tabs = [document.getElementById('tabTakeout'), document.getElementById('tabDelivery')];
+  tabs.forEach(function (t) {
+    t.addEventListener('click', function () {
+      tabs.forEach(function (x) { x.classList.remove('on'); });
+      t.classList.add('on');
+    });
+  });
+  document.querySelectorAll('.slot').forEach(function (s) {
+    s.addEventListener('click', function () {
+      document.querySelectorAll('.slot').forEach(function (x) { x.classList.remove('on'); });
+      s.classList.add('on');
+    });
+  });
+})();
+</script>
