@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>次期AI商材開発 調査報告</title>
+<style>
+  @page { size: A4 landscape; margin: 0; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { background: #fff; }
+  body {
+    font-family: "Yu Gothic UI", "Yu Gothic", "Meiryo", sans-serif;
+    color: #1c1c1a;
+    -webkit-print-color-adjust: exact; print-color-adjust: exact;
+  }
+  .slide {
+    width: 297mm; height: 210mm;
+    overflow: hidden; position: relative;
+    page-break-after: always;
+    padding: 13mm 16mm 15mm;
+    background: #fcfcfa;
+  }
+  .slide.last { page-break-after: auto; }
+
+  /* ---------- common ---------- */
+  .accent  { color: #8a4a12; }
+  .kicker {
+    font-size: 10pt; font-weight: 700; letter-spacing: 0.12em;
+    color: #8a4a12; margin-bottom: 3mm;
+  }
+  h2.slide-title {
+    font-size: 19pt; font-weight: 700; line-height: 1.3;
+    margin-bottom: 2mm; letter-spacing: 0.02em;
+  }
+  .slide-sub { font-size: 10.5pt; color: #77756e; margin-bottom: 6mm; }
+  .rule { height: 0.8mm; width: 22mm; background: #8a4a12; margin: 4mm 0 6mm; border-radius: 1mm; }
+  .foot {
+    position: absolute; bottom: 7mm; left: 16mm; right: 16mm;
+    display: flex; justify-content: space-between;
+    font-size: 8pt; color: #a09d94; border-top: 0.3mm solid #e3e1d8; padding-top: 2.5mm;
+  }
+  .cols { display: flex; gap: 8mm; }
+  .col { flex: 1; min-width: 0; }
+
+  .card {
+    background: #fff; border: 0.3mm solid #e3e1d8; border-radius: 2.5mm;
+    padding: 5mm 6mm; margin-bottom: 4mm;
+  }
+  .card h4 { font-size: 11.5pt; font-weight: 700; margin-bottom: 1.5mm; }
+  .card p  { font-size: 9pt; line-height: 1.65; color: #45443f; }
+  .tag {
+    display: inline-block; font-size: 7.5pt; font-weight: 700; color: #8a4a12;
+    background: #f3ece3; border-radius: 1.5mm; padding: 0.8mm 2.5mm; margin-bottom: 1.8mm;
+    letter-spacing: 0.06em;
+  }
+  .stat-row { display: flex; gap: 8mm; margin-top: 2.5mm; padding-top: 2.5mm; border-top: 0.3mm solid #eeece4; }
+  .stat .n { font-size: 15pt; font-weight: 700; color: #1c1c1a; }
+  .stat .c { font-size: 7.5pt; color: #8b887e; }
+
+  table { border-collapse: collapse; width: 100%; background: #fff; }
+  th, td { border: 0.3mm solid #dddbd2; padding: 2.6mm 3mm; font-size: 9pt; line-height: 1.45; }
+  thead th { background: #efede6; font-size: 8.5pt; font-weight: 700; color: #55534c; }
+  tbody th { background: #f7f6f1; font-weight: 600; text-align: left; font-size: 8.5pt; color: #45443f; }
+  td.num { text-align: center; font-variant-numeric: tabular-nums; }
+  tr.total td, tr.total th { background: #f3ece3; font-weight: 700; }
+  td.win { color: #8a4a12; font-weight: 700; }
+
+  ul.list { list-style: none; }
+  ul.list li {
+    font-size: 10pt; line-height: 1.7; color: #33322e;
+    padding-left: 5.5mm; position: relative; margin-bottom: 2.2mm;
+  }
+  ul.list li::before {
+    content: ""; position: absolute; left: 0; top: 2.3mm;
+    width: 2.2mm; height: 2.2mm; border-radius: 50%; background: #8a4a12;
+  }
+  ul.list li b { color: #1c1c1a; }
+
+  .money {
+    background: #f3ece3; border-radius: 2mm; padding: 3.5mm 5mm;
+    font-size: 9.5pt; line-height: 1.6; color: #33322e; margin-top: 3mm;
+  }
+  .money b { color: #8a4a12; }
+
+  /* ---------- title slide ---------- */
+  .title-slide { display: flex; flex-direction: column; justify-content: center; background: #fcfcfa; }
+  .title-slide .band { height: 1.6mm; width: 34mm; background: #8a4a12; border-radius: 1mm; margin-bottom: 8mm; }
+  .title-slide h1 { font-size: 30pt; font-weight: 700; line-height: 1.4; margin-bottom: 5mm; letter-spacing: 0.02em; }
+  .title-slide .lead { font-size: 12.5pt; color: #55534c; line-height: 1.8; margin-bottom: 12mm; }
+  .title-meta { display: flex; gap: 14mm; font-size: 10pt; color: #77756e; }
+  .title-meta b { color: #33322e; }
+
+  .thesis-box {
+    background: #f3ece3; border-left: 1.8mm solid #8a4a12; border-radius: 2mm;
+    padding: 5mm 7mm; margin: 4mm 0;
+  }
+  .thesis-box .lbl { font-size: 8.5pt; font-weight: 700; color: #8a4a12; letter-spacing: 0.1em; margin-bottom: 1.5mm; }
+  .thesis-box p { font-size: 13pt; font-weight: 600; line-height: 1.75; color: #1c1c1a; }
+
+  /* roadmap */
+  .phase-row { display: flex; gap: 5mm; margin-top: 2mm; }
+  .phase-card {
+    flex: 1; background: #fff; border: 0.3mm solid #e3e1d8; border-top: 1.4mm solid #8a4a12;
+    border-radius: 2mm; padding: 4.5mm 5mm;
+  }
+  .phase-card .ph { font-size: 8pt; font-weight: 700; color: #8a4a12; letter-spacing: 0.08em; margin-bottom: 1.5mm; }
+  .phase-card h4 { font-size: 10.5pt; font-weight: 700; margin-bottom: 1.5mm; line-height: 1.4; }
+  .phase-card p { font-size: 8.2pt; line-height: 1.6; color: #55534c; }
+
+  .arrow-flow { display: flex; align-items: center; gap: 3mm; margin: 5mm 0; }
+  .flow-box {
+    flex: 1; background: #fff; border: 0.3mm solid #e3e1d8; border-radius: 2mm;
+    padding: 4mm 5mm; text-align: center;
+  }
+  .flow-box .t { font-size: 8pt; color: #8b887e; margin-bottom: 1mm; }
+  .flow-box .v { font-size: 10.5pt; font-weight: 700; }
+  .flow-arrow { font-size: 14pt; color: #8a4a12; font-weight: 700; }
+</style>
+</head>
+<body>
+
+<!-- ========== 1. 表紙 ========== -->
+<div class="slide title-slide">
+  <div class="band"></div>
+  <h1>次期AI商材開発に向けた<br>海外AIサービス調査 報告資料</h1>
+  <p class="lead">中小企業（美容室・飲食店・工務店）向け 月額サブスクリプション商材の候補選定<br>—「クライアントが儲かる構造」を軸とした調査結果と推奨ロードマップ —</p>
+  <div class="title-meta">
+    <span>作成日：<b>2026年7月14日</b></span>
+    <span>対象価格帯：<b>月額 ¥5,000〜50,000</b></span>
+    <span>ステータス：<b>調査完了・MVP要件定義へ</b></span>
+  </div>
+</div>
+
+<!-- ========== 2. 背景と目的 ========== -->
+<div class="slide">
+  <div class="kicker">01｜背景と目的</div>
+  <h2 class="slide-title">WEB制作のコモディティ化を越え、「解約されない月額商材」へ</h2>
+  <div class="rule"></div>
+  <div class="cols">
+    <div class="col">
+      <h4 style="font-size:11.5pt; margin-bottom:3mm;">当社の状況</h4>
+      <ul class="list">
+        <li>WEBサービスのコモディティ化により制作費用が下落。<b>割賦販売から月額サービスへ移行済み</b></li>
+        <li>収益性悪化への対応として<b>MEO・SNSサービスをこの10年展開</b></li>
+        <li>AIサービスの台頭を受け、<b>次の商品開発の機会</b>を検討中</li>
+      </ul>
+      <h4 style="font-size:11.5pt; margin:5mm 0 3mm;">既存AI商材</h4>
+      <ul class="list">
+        <li><b>MEOエージェント</b> — MEOツールのAIエージェント化</li>
+        <li><b>建築リフォームエージェント</b> — 現況画像からリフォーム後画像をAI生成</li>
+        <li><b>サイトマイスター</b> — AIがサイト3案生成・動画/画像/多言語対応</li>
+      </ul>
+    </div>
+    <div class="col">
+      <h4 style="font-size:11.5pt; margin-bottom:3mm;">次期商材の条件</h4>
+      <ul class="list">
+        <li>ターゲット：<b>美容室・飲食店・工務店</b>などの中小企業</li>
+        <li>価格帯：<b>月額 ¥5,000〜50,000</b> のサブスクリプション</li>
+        <li>海外で展開済み・<b>日本ではまだ未展開</b>の領域</li>
+        <li><b>解約されにくい</b>こと</li>
+      </ul>
+      <div class="thesis-box" style="margin-top:6mm;">
+        <div class="lbl">本調査の中心思想</div>
+        <p>導入クライアントが収益を得る（儲かる）構造をつくらなければ、当社に支払う原資が生まれない。</p>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>海外AIサービス調査報告</span><span>2 / 10</span></div>
+</div>
+
+<!-- ========== 3. 調査アプローチ ========== -->
+<div class="slide">
+  <div class="kicker">02｜調査アプローチ</div>
+  <h2 class="slide-title">2段階調査：「囲い込み」軸から「収益直結」軸へ転換</h2>
+  <div class="rule"></div>
+  <div class="arrow-flow">
+    <div class="flow-box">
+      <div class="t">第1弾調査</div>
+      <div class="v">業種別・機能ロックイン軸</div>
+      <div class="t" style="margin-top:1.5mm;">美容室・飲食店・工務店の3業種で海外AI SaaSを網羅調査</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box" style="border-color:#8a4a12; border-width:0.5mm;">
+      <div class="t">思想の転換</div>
+      <div class="v class=accent" style="color:#8a4a12;">クライアントが儲かる構造へ</div>
+      <div class="t" style="margin-top:1.5mm;">「機能で解約させない」ではなく「成果が見えるから解約されない」</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box">
+      <div class="t">第2弾調査</div>
+      <div class="v">WEBマーケティング軸</div>
+      <div class="t" style="margin-top:1.5mm;">収益貢献が円建てで見える海外商材を再調査・候補を再評価</div>
+    </div>
+  </div>
+  <div class="thesis-box">
+    <div class="lbl">調査で最も明確だった教訓（設計原則）</div>
+    <p>「AIツール」を売らない。「今月このサービスがあなたの店に ¥X の売上をつくった」と円建てで見えるレポートごと売る。成果が毎月見えれば、解約する理由がなくなる。</p>
+  </div>
+  <p style="font-size:9.5pt; color:#55534c; line-height:1.7; margin-top:3mm;">
+    海外市場の実績でも、AI広告クリエイティブ・AI分析ツールなど「成果が金額で見えない」商材はSMBで解約率が高く、
+    予約・注文・売上そのものを取り込んで金額ダッシュボードで見せる商材が急成長している。
+  </p>
+  <div class="foot"><span>海外AIサービス調査報告</span><span>3 / 10</span></div>
+</div>
+
+<!-- ========== 4. 海外成功事例 ========== -->
+<div class="slide">
+  <div class="kicker">03｜海外の成功事例</div>
+  <h2 class="slide-title">「クライアントが儲かる構造」で急成長する3つのモデル</h2>
+  <div class="rule"></div>
+  <div class="cols">
+    <div class="col">
+      <div class="card" style="border-left: 1.4mm solid #8a4a12;">
+        <div class="tag">飲食店｜米国</div>
+        <h4>Owner.com — 直販売上エンジン</h4>
+        <p>月額$499でサイト+SEO+手数料ゼロのオンライン注文+SMS/メールマーケを一括提供。ポータル（DoorDash等）の20〜30%手数料の回避額と直販売上を毎月ダッシュボード表示。「サブスク費が毎月自動的にペイする」構造。</p>
+        <div class="stat-row">
+          <div class="stat"><div class="n">$80.5M</div><div class="c">ARR（前年比+137%）</div></div>
+          <div class="stat"><div class="n">$1B</div><div class="c">評価額（2025）</div></div>
+          <div class="stat"><div class="n">$499/月</div><div class="c">単一プラン</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="card">
+        <div class="tag">工務店・ホームサービス｜米国</div>
+        <h4>Hatch — 高速リード対応 + 掘り起こし</h4>
+        <p>問い合わせに数秒でAIが応答して商談化。失注見積もりへのAI再アプローチ「Rehash」で事例では$7Mの追加受注。高単価業種ほど「1リード救出＝年間費用回収」が成立。</p>
+      </div>
+      <div class="card">
+        <div class="tag">美容室・ローカルSMB｜米国</div>
+        <h4>データベース・リアクティベーション（休眠客AI掘り起こし）</h4>
+        <p>既存顧客リストにAIがSMS/メールで会話し予約まで自動化。広告費ゼロ・30日以内に「X通送信→Y返信→Z予約×客単価＝金額」と成果がそのまま帰属計算に。成果報酬または$500〜2,000/月で販売。</p>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>海外AIサービス調査報告</span><span>4 / 10</span></div>
+</div>
+
+<!-- ========== 5. 市場データ ========== -->
+<div class="slide">
+  <div class="kicker">04｜市場環境の変化</div>
+  <h2 class="slide-title">店探しの主戦場が「AI検索」へ移り始めている</h2>
+  <div class="rule"></div>
+  <div class="cols">
+    <div class="col">
+      <div class="card">
+        <h4>消費者行動の変化</h4>
+        <div class="stat-row" style="border-top:none; padding-top:1mm;">
+          <div class="stat"><div class="n">6%→45%</div><div class="c">AIで地域の店を探す米国消費者（2025→2026）</div></div>
+          <div class="stat"><div class="n">約37%</div><div class="c">日本のAI検索利用率（11ヶ月で3.5倍）</div></div>
+        </div>
+        <div class="stat-row">
+          <div class="stat"><div class="n">4.4〜23倍</div><div class="c">AI経由来訪のCVR（通常検索比）</div></div>
+          <div class="stat"><div class="n">約1.2%</div><div class="c">現在AIに推薦されるローカル店舗の割合＝先行者利益</div></div>
+        </div>
+      </div>
+      <div class="card">
+        <h4>示唆</h4>
+        <p>当社のMEO事業と同じ構造の商機が「AI検索最適化（LLMO）」で再来している。GBP運用・レポート様式・顧客基盤がそのまま転用できる。</p>
+      </div>
+    </div>
+    <div class="col">
+      <div class="card">
+        <h4>国内競合の空白（LLMO対策）</h4>
+        <table>
+          <thead><tr><th>価格帯</th><th>国内の状況</th></tr></thead>
+          <tbody>
+            <tr><td>¥150,000〜800,000/月</td><td>LLMOコンサル多数（企業向け）</td></tr>
+            <tr><td class="win">¥10,000〜30,000/月</td><td class="win">プロダクト化された商品がほぼ空白</td></tr>
+            <tr><td>〜¥5,000/月</td><td>MEO+LLMO簡易バンドル（コモディティ）</td></tr>
+          </tbody>
+        </table>
+        <p style="margin-top:2.5mm;">原価はAI可視性計測ツール（Local Falcon等）$25〜30/月/店舗と低く、粗利を確保しやすい。</p>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>海外AIサービス調査報告</span><span>5 / 10</span></div>
+</div>
+
+<!-- ========== 6. 4候補比較 ========== -->
+<div class="slide">
+  <div class="kicker">05｜候補比較</div>
+  <h2 class="slide-title">4つの商材候補：6軸評価（5点満点）</h2>
+  <p class="slide-sub">「収益直結度（円で見えるか）」「成果が見えるまでの速さ」を最重視</p>
+  <table>
+    <thead>
+      <tr>
+        <th style="width:24%;">評価軸</th>
+        <th>A. 直販売上エンジン<br>（飲食・Owner.com型）</th>
+        <th style="background:#f3ece3;">B. AI掘り起こしエンジン<br>（美容室/飲食・休眠客再活性）</th>
+        <th>C. 高速リード対応AI<br>（工務店・Hatch型）</th>
+        <th>D. AI検索対策（LLMO）<br>アドオン</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><th>収益直結度（円で見えるか）</th><td class="num">5</td><td class="num">5</td><td class="num">5</td><td class="num">3</td></tr>
+      <tr><th>成果が見えるまでの速さ</th><td class="num">4</td><td class="num win">5</td><td class="num">3</td><td class="num">3</td></tr>
+      <tr><th>開発規模の小ささ</th><td class="num">2</td><td class="num">4</td><td class="num">3</td><td class="num win">5</td></tr>
+      <tr><th>既存資産の転用度</th><td class="num">4</td><td class="num">4</td><td class="num">3</td><td class="num win">5</td></tr>
+      <tr><th>価格帯適合（¥5,000〜50,000）</th><td class="num">4</td><td class="num">5</td><td class="num">4</td><td class="num">5</td></tr>
+      <tr><th>国内市場の空白度</th><td class="num">4</td><td class="num">4</td><td class="num">4</td><td class="num">4</td></tr>
+      <tr class="total"><th>合計 / 平均</th><td class="num">23 / 3.8</td><td class="num win">27 / 4.5</td><td class="num">22 / 3.7</td><td class="num">25 / 4.2</td></tr>
+    </tbody>
+  </table>
+  <div class="money" style="margin-top:5mm;">
+    <b>評価結果：</b>B（AI掘り起こしエンジン）が総合4.5でMVP本命。D（LLMOアドオン）は開発がほぼ不要で既存MEO顧客に即販売できる「第2の矢」。AとCは基盤完成後の展開候補。
+  </div>
+  <div class="foot"><span>海外AIサービス調査報告</span><span>6 / 10</span></div>
+</div>
+
+<!-- ========== 7. 候補B詳細 ========== -->
+<div class="slide">
+  <div class="kicker">06｜MVP本命：候補B</div>
+  <h2 class="slide-title">AI掘り起こしエンジン — 休眠客をLINEで再来店させ、成果を円で報告する</h2>
+  <div class="rule"></div>
+  <div class="cols">
+    <div class="col">
+      <ul class="list">
+        <li><b>内容：</b>美容室・飲食店の休眠顧客リストにAIがLINEで会話し、返信対応から予約まで自動化。毎月「円建て成果レポート」を提出</li>
+        <li><b>想定価格：</b>¥19,800〜49,800/月、または予約1件あたりの成果報酬ハイブリッド</li>
+        <li><b>広告費ゼロ：</b>店が既に持つ顧客リストが原資。ホットペッパー掲載料高騰への明確なカウンター提案</li>
+        <li><b>国内の空白：</b>LINE配信ツールはルールベース配信止まり。「AIが会話して予約まで完結し、成果を金額で報告する」形は未確立</li>
+      </ul>
+    </div>
+    <div class="col">
+      <div class="card">
+        <h4>儲かる構造（美容室の例）</h4>
+        <div class="arrow-flow" style="margin:3mm 0;">
+          <div class="flow-box"><div class="t">送信</div><div class="v">500通</div></div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-box"><div class="t">返信</div><div class="v">40件</div></div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-box"><div class="t">再来店</div><div class="v">14件</div></div>
+        </div>
+        <div class="money">
+          14件 × 客単価¥7,000 ＝ <b>月¥98,000の売上創出</b><br>
+          月額¥29,800なら <b>投資対効果3.3倍</b> が毎月レポートで見える
+        </div>
+      </div>
+      <p style="font-size:9pt; color:#55534c; line-height:1.65; margin-top:2mm;">
+        MVPは「LINE公式アカウント連携＋AI会話＋予約導線＋成果レポート」の4点に絞ることで開発規模も4候補中最小級。初月から成果数値が出るため、稟議・営業の両面で立ち上げやすい。
+      </p>
+    </div>
+  </div>
+  <div class="foot"><span>海外AIサービス調査報告</span><span>7 / 10</span></div>
+</div>
+
+<!-- ========== 8. 候補D + A/C ========== -->
+<div class="slide">
+  <div class="kicker">07｜併売と将来展開：候補D・C・A</div>
+  <h2 class="slide-title">Dは今すぐ売れる第2の矢、C・Aはエンジン転用で段階展開</h2>
+  <div class="rule"></div>
+  <div class="cols">
+    <div class="col">
+      <div class="card" style="border-left: 1.4mm solid #8a4a12;">
+        <div class="tag">Phase 1 並行｜開発ほぼ不要</div>
+        <h4>D. AI検索対策（LLMO）アドオン</h4>
+        <p>ChatGPT・Gemini・AI Overviewsに「○○市 おすすめ美容室」で推薦される状態をつくる。MEOの正統進化であり、既存MEO契約への<b>+¥10,000〜15,000のアドオン</b>として即販売可能。月次成果物は「AI推薦シェアレポート（定点プロンプト・競合比較）」「Bing Places/GBP/構造化データ整備」「AI引用コンテンツ」「GA4 AI流入ダッシュボード」。</p>
+      </div>
+    </div>
+    <div class="col">
+      <div class="card">
+        <div class="tag">Phase 2｜Bのエンジン転用</div>
+        <h4>C. 高速リード対応AI（工務店）</h4>
+        <p>問い合わせ即時AI応答＋失注見積もりのAI再アプローチ。リフォーム単価¥50万〜300万のため<b>受注1件で年間費用の2倍を回収</b>。Bの会話AI・追客・レポート基盤を再パッケージして展開。</p>
+      </div>
+      <div class="card">
+        <div class="tag">Phase 3｜フラッグシップ統合</div>
+        <h4>A. 直販売上エンジン（飲食店版Owner.com）</h4>
+        <p>サイト+MEO+手数料ゼロの直販予約/注文+LINEマーケを一括提供し「直販売上¥X／ポータル手数料¥Y削減」を毎月表示。食べログ・ホットペッパー・デリバリー手数料の痛みは米国と相似で、<b>日本版は不在</b>。¥30,000〜50,000/月。</p>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>海外AIサービス調査報告</span><span>8 / 10</span></div>
+</div>
+
+<!-- ========== 9. ロードマップ ========== -->
+<div class="slide">
+  <div class="kicker">08｜推奨ロードマップ</div>
+  <h2 class="slide-title">共通基盤は「円建て成果ダッシュボード」— 商材が増えるほど解約理由が消える</h2>
+  <div class="rule"></div>
+  <div class="phase-row">
+    <div class="phase-card">
+      <div class="ph">PHASE 1｜MVP</div>
+      <h4>B. AI掘り起こしエンジン<br>（美容室から）</h4>
+      <p>広告費ゼロ・30日以内に円建て成果。LINE連携+AI会話+予約導線+成果レポートの4点に絞り最短で市場検証。初月から成果数値が出るため稟議を通しやすい。</p>
+    </div>
+    <div class="phase-card">
+      <div class="ph">PHASE 1 並行</div>
+      <h4>D. AI検索対策（LLMO）<br>アドオン</h4>
+      <p>開発はレポート自動生成中心で軽い。MEO既存顧客に即販売し、Bの開発期間中のキャッシュ確保と市場先行を両取り。</p>
+    </div>
+    <div class="phase-card">
+      <div class="ph">PHASE 2</div>
+      <h4>C. 高速リード対応AI<br>（工務店へ横展開）</h4>
+      <p>Bで構築した会話AI・追客エンジン・成果レポート基盤を、建築リフォームエージェントの顧客基盤に向けて再パッケージ。価格上限¥50,000を狙う。</p>
+    </div>
+    <div class="phase-card">
+      <div class="ph">PHASE 3</div>
+      <h4>A. 直販売上エンジン<br>（飲食店版Owner.com）</h4>
+      <p>サイトマイスター+MEO+B/D基盤を統合した旗艦商品。「ポータル依存から直販へ」。単品売りから“売上をつくる月額パートナー”への業態転換が完成。</p>
+    </div>
+  </div>
+  <div class="thesis-box" style="margin-top:6mm;">
+    <div class="lbl">全体構造</div>
+    <p>すべての商材が同じ「円建て成果ダッシュボード」の上で成果を語る。導入商材が増えるほどクライアントの売上貢献が積み上がり、解約する理由が構造的に消えていく。</p>
+  </div>
+  <div class="foot"><span>海外AIサービス調査報告</span><span>9 / 10</span></div>
+</div>
+
+<!-- ========== 10. 結論 ========== -->
+<div class="slide last">
+  <div class="kicker">09｜結論と次のステップ</div>
+  <h2 class="slide-title">売るのはAIではなく「毎月の儲けの証拠」</h2>
+  <div class="rule"></div>
+  <div class="cols">
+    <div class="col">
+      <div class="thesis-box" style="margin-top:0;">
+        <div class="lbl">結論</div>
+        <p>Phase 1として「B. AI掘り起こしエンジン」のMVP開発と「D. LLMOアドオン」の即販売を並行着手する。すべての商材を共通の円建て成果ダッシュボードに載せ、クライアントが儲かり続ける＝支払い原資が生まれ続ける構造をつくる。</p>
+      </div>
+      <ul class="list" style="margin-top:4mm;">
+        <li>Bは<b>広告費ゼロ・初月から成果</b>のため、最も検証が速い</li>
+        <li>Dは<b>MEO資産の転用</b>で開発負担が最小、今期から売上化</li>
+        <li>両商材の成果データがPhase 2/3への投資判断材料になる</li>
+      </ul>
+    </div>
+    <div class="col">
+      <h4 style="font-size:11.5pt; margin-bottom:3mm;">次のステップ</h4>
+      <table>
+        <thead><tr><th style="width:12%;">順序</th><th>アクション</th></tr></thead>
+        <tbody>
+          <tr><td class="num">1</td><td>B（AI掘り起こしエンジン）のMVP要件定義<br><span style="font-size:8pt; color:#8b887e;">対象業種・機能スコープ・LINE/データ連携・価格プラン・成果レポート仕様</span></td></tr>
+          <tr><td class="num">2</td><td>D（LLMOアドオン）の商品パッケージ設計<br><span style="font-size:8pt; color:#8b887e;">月次成果物・レポートテンプレート・原価計算</span></td></tr>
+          <tr><td class="num">3</td><td>プレゼン資料・稟議資料の作成</td></tr>
+          <tr><td class="num">4</td><td>MVP開発 → パイロット導入 → 本開発判断</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="foot"><span>海外AIサービス調査報告</span><span>10 / 10</span></div>
+</div>
+
+</body>
+</html>
