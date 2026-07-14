@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>オーダーマイスター MVP開発 稟議資料</title>
+<style>
+  @page { size: A4 landscape; margin: 0; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { background: #fff; }
+  body {
+    font-family: "Yu Gothic UI", "Yu Gothic", "Meiryo", sans-serif;
+    color: #1c1c1a;
+    -webkit-print-color-adjust: exact; print-color-adjust: exact;
+  }
+  .slide {
+    width: 297mm; height: 210mm;
+    overflow: hidden; position: relative;
+    page-break-after: always;
+    padding: 13mm 16mm 15mm;
+    background: #fcfcfa;
+  }
+  .slide.last { page-break-after: auto; }
+
+  .accent  { color: #8a4a12; }
+  .kicker {
+    font-size: 10pt; font-weight: 700; letter-spacing: 0.12em;
+    color: #8a4a12; margin-bottom: 3mm;
+  }
+  h2.slide-title {
+    font-size: 19pt; font-weight: 700; line-height: 1.3;
+    margin-bottom: 2mm; letter-spacing: 0.02em;
+  }
+  .slide-sub { font-size: 10.5pt; color: #77756e; margin-bottom: 5mm; }
+  .rule { height: 0.8mm; width: 22mm; background: #8a4a12; margin: 4mm 0 6mm; border-radius: 1mm; }
+  .foot {
+    position: absolute; bottom: 7mm; left: 16mm; right: 16mm;
+    display: flex; justify-content: space-between;
+    font-size: 8pt; color: #a09d94; border-top: 0.3mm solid #e3e1d8; padding-top: 2.5mm;
+  }
+  .cols { display: flex; gap: 8mm; }
+  .col { flex: 1; min-width: 0; }
+
+  .card {
+    background: #fff; border: 0.3mm solid #e3e1d8; border-radius: 2.5mm;
+    padding: 5mm 6mm; margin-bottom: 4mm;
+  }
+  .card h4 { font-size: 11.5pt; font-weight: 700; margin-bottom: 1.5mm; }
+  .card p  { font-size: 9pt; line-height: 1.65; color: #45443f; }
+  .tag {
+    display: inline-block; font-size: 7.5pt; font-weight: 700; color: #8a4a12;
+    background: #f3ece3; border-radius: 1.5mm; padding: 0.8mm 2.5mm; margin-bottom: 1.8mm;
+    letter-spacing: 0.06em;
+  }
+  .stat-row { display: flex; gap: 8mm; margin-top: 2.5mm; padding-top: 2.5mm; border-top: 0.3mm solid #eeece4; }
+  .stat .n { font-size: 15pt; font-weight: 700; color: #1c1c1a; }
+  .stat .c { font-size: 7.5pt; color: #8b887e; }
+
+  table { border-collapse: collapse; width: 100%; background: #fff; }
+  th, td { border: 0.3mm solid #dddbd2; padding: 2.4mm 3mm; font-size: 9pt; line-height: 1.45; }
+  thead th { background: #efede6; font-size: 8.5pt; font-weight: 700; color: #55534c; }
+  tbody th { background: #f7f6f1; font-weight: 600; text-align: left; font-size: 8.5pt; color: #45443f; }
+  td.num { text-align: center; font-variant-numeric: tabular-nums; }
+  tr.total td, tr.total th { background: #f3ece3; font-weight: 700; }
+  td.win { color: #8a4a12; font-weight: 700; }
+  td.bad { color: #a33; font-weight: 700; }
+
+  ul.list { list-style: none; }
+  ul.list li {
+    font-size: 10pt; line-height: 1.7; color: #33322e;
+    padding-left: 5.5mm; position: relative; margin-bottom: 2.2mm;
+  }
+  ul.list li::before {
+    content: ""; position: absolute; left: 0; top: 2.3mm;
+    width: 2.2mm; height: 2.2mm; border-radius: 50%; background: #8a4a12;
+  }
+  ul.list li b { color: #1c1c1a; }
+
+  .money {
+    background: #f3ece3; border-radius: 2mm; padding: 3.5mm 5mm;
+    font-size: 9.5pt; line-height: 1.6; color: #33322e; margin-top: 3mm;
+  }
+  .money b { color: #8a4a12; }
+
+  .title-slide { display: flex; flex-direction: column; justify-content: center; }
+  .title-slide .band { height: 1.6mm; width: 34mm; background: #8a4a12; border-radius: 1mm; margin-bottom: 8mm; }
+  .title-slide h1 { font-size: 29pt; font-weight: 700; line-height: 1.45; margin-bottom: 5mm; letter-spacing: 0.02em; }
+  .title-slide .lead { font-size: 12.5pt; color: #55534c; line-height: 1.8; margin-bottom: 12mm; }
+  .title-meta { display: flex; gap: 14mm; font-size: 10pt; color: #77756e; }
+  .title-meta b { color: #33322e; }
+
+  .thesis-box {
+    background: #f3ece3; border-left: 1.8mm solid #8a4a12; border-radius: 2mm;
+    padding: 5mm 7mm; margin: 4mm 0;
+  }
+  .thesis-box .lbl { font-size: 8.5pt; font-weight: 700; color: #8a4a12; letter-spacing: 0.1em; margin-bottom: 1.5mm; }
+  .thesis-box p { font-size: 12.5pt; font-weight: 600; line-height: 1.75; color: #1c1c1a; }
+
+  .arrow-flow { display: flex; align-items: center; gap: 3mm; margin: 4mm 0; }
+  .flow-box {
+    flex: 1; background: #fff; border: 0.3mm solid #e3e1d8; border-radius: 2mm;
+    padding: 3.5mm 4mm; text-align: center;
+  }
+  .flow-box .t { font-size: 8pt; color: #8b887e; margin-bottom: 1mm; }
+  .flow-box .v { font-size: 10.5pt; font-weight: 700; }
+  .flow-arrow { font-size: 14pt; color: #8a4a12; font-weight: 700; }
+
+  .phase-row { display: flex; gap: 5mm; margin-top: 2mm; }
+  .phase-card {
+    flex: 1; background: #fff; border: 0.3mm solid #e3e1d8; border-top: 1.4mm solid #8a4a12;
+    border-radius: 2mm; padding: 4mm 4.5mm;
+  }
+  .phase-card .ph { font-size: 8pt; font-weight: 700; color: #8a4a12; letter-spacing: 0.08em; margin-bottom: 1.5mm; }
+  .phase-card h4 { font-size: 10pt; font-weight: 700; margin-bottom: 1.5mm; line-height: 1.4; }
+  .phase-card p { font-size: 8.2pt; line-height: 1.6; color: #55534c; }
+</style>
+</head>
+<body>
+
+<!-- ========== 1. 表紙 ========== -->
+<div class="slide title-slide">
+  <div class="band"></div>
+  <h1>新商材MVP開発 稟議資料<br>直販オンライン注文システム<span style="font-size:17pt; color:#77756e;">（仮称：オーダーマイスター）</span></h1>
+  <p class="lead">「ポータルに払っている手数料を、自分の店の売上に取り戻す」<br>飲食店向け・手数料ゼロ直販注文 ＋ 円建て成果ダッシュボードの月額サービス</p>
+  <div class="title-meta">
+    <span>作成日：<b>2026年7月14日</b></span>
+    <span>起案：<b>次期AI商材開発プロジェクト</b></span>
+    <span>依頼事項：<b>MVP開発着手の承認</b></span>
+  </div>
+</div>
+
+<!-- ========== 2. エグゼクティブサマリー ========== -->
+<div class="slide">
+  <div class="kicker">01｜エグゼクティブサマリー</div>
+  <h2 class="slide-title">何を・なぜ・いくらで・いつまでに</h2>
+  <div class="rule"></div>
+  <table>
+    <tbody>
+      <tr><th style="width:18%;">商品</th><td>飲食店の自社サイトに手数料ゼロのオンライン注文（テイクアウト・自店配達）を組み込み、「直販売上¥X／節約した手数料¥Y」を毎月見せる月額サービス（<b>¥29,800/月</b>）</td></tr>
+      <tr><th>なぜ今か</th><td>Uber Eats手数料35%・出前館最大40%への店舗の不満が顕在化。米国では同モデルのOwner.comがARR $80.5M（前年比+137%）と急成長。国内に「集客と成果表示まで一体」の競合は不在</td></tr>
+      <tr><th>なぜ当社か</th><td>注文の入口は店のWEBサイト。サイト制作+MEO+SNSを握る当社は「注文が入る状態」まで一気通貫で作れる唯一のポジション。既存飲食クライアントへのアップセルで営業コストほぼゼロ</td></tr>
+      <tr><th>投資</th><td>MVP開発 <b>8週間・約3人月</b> ＋ 外部サービス実費（Stripe/Supabase/LINE/Claude API 月数万円）</td></tr>
+      <tr><th>検証</th><td>既存飲食クライアント<b>3〜5店舗で90日パイロット</b>。「節約額＞月額費」達成店舗率80%以上等のKPIで本開発をGO/NO-GO判断</td></tr>
+      <tr class="total"><th>依頼事項</th><td>MVP開発着手・パイロット提供枠（無償〜半額）・外部サービス利用の承認</td></tr>
+    </tbody>
+  </table>
+  <div class="foot"><span>直販オンライン注文システム MVP稟議</span><span>2 / 10</span></div>
+</div>
+
+<!-- ========== 3. 市場の痛み ========== -->
+<div class="slide">
+  <div class="kicker">02｜市場の痛み：手数料の算数</div>
+  <h2 class="slide-title">デリバリーポータルは売上の35〜40%を持っていく</h2>
+  <div class="rule"></div>
+  <div class="cols">
+    <div class="col">
+      <table>
+        <thead><tr><th>チャネル</th><th>店舗負担</th></tr></thead>
+        <tbody>
+          <tr><th>Uber Eats（配達代行）</th><td class="bad">売上の35%</td></tr>
+          <tr><th>Uber Eats（自社配達プラン）</th><td>約15%</td></tr>
+          <tr><th>出前館（配達代行）</th><td class="bad">最大40% + 決済 約3.245%</td></tr>
+          <tr class="total"><th>自社サイト直販（本商品）</th><td class="win">月額固定 + 決済 約3.6%のみ</td></tr>
+        </tbody>
+      </table>
+      <p style="font-size:9pt; color:#55534c; line-height:1.65; margin-top:3mm;">
+        さらにポータルは<b>顧客情報を店に渡さない</b>ため、店は自分のお客様に再来店を働きかけることすらできない。直販なら顧客リストが店の資産になる。
+      </p>
+    </div>
+    <div class="col">
+      <div class="card">
+        <h4>店舗損益シミュレーション（デリバリー/テイクアウト月商30万円）</h4>
+        <table style="margin-top:2mm;">
+          <thead><tr><th></th><th>Uber Eats経由</th><th>直販（本商品）</th></tr></thead>
+          <tbody>
+            <tr><th>手数料/システム費</th><td class="bad">▲105,000円</td><td>▲29,800円＋決済▲10,800円</td></tr>
+            <tr><th>配達</th><td>ポータル負担</td><td>スタッフ配達（近隣）</td></tr>
+            <tr class="total"><th>手残り差</th><td></td><td class="win">月 +5〜6万円 改善</td></tr>
+          </tbody>
+        </table>
+        <div class="money">月商100万円の店なら手数料<b>35万円 → 約6.6万円</b>。削減額は月商に比例して拡大。<b>「本商品の月額は節約額の中から払える」</b></div>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>直販オンライン注文システム MVP稟議</span><span>3 / 10</span></div>
+</div>
+
+<!-- ========== 4. ベンチマーク ========== -->
+<div class="slide">
+  <div class="kicker">03｜ベンチマーク</div>
+  <h2 class="slide-title">米国では同モデルが検証済み：Owner.com</h2>
+  <div class="rule"></div>
+  <div class="cols">
+    <div class="col">
+      <div class="card" style="border-left: 1.4mm solid #8a4a12;">
+        <div class="tag">米国・飲食店向け</div>
+        <h4>Owner.com — 直販売上エンジン</h4>
+        <p>月額$499でサイト+SEO+手数料ゼロ注文+SMS/メールマーケを一括提供。ポータル手数料の回避額と直販売上をダッシュボードで毎月表示し、「サブスク費が毎月自動的にペイする」構造で急成長。</p>
+        <div class="stat-row">
+          <div class="stat"><div class="n">$80.5M</div><div class="c">ARR（前年比+137%）</div></div>
+          <div class="stat"><div class="n">$1B</div><div class="c">評価額（2025 Series C）</div></div>
+          <div class="stat"><div class="n">$499/月</div><div class="c">単一プラン（≒¥75,000）</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <ul class="list">
+        <li><b>日本は構造が相似：</b>食べログ・ホットペッパーの掲載料、Uber Eats/出前館の手数料という「ポータル依存の痛み」はDoorDash依存と同型</li>
+        <li><b>日本版は不在：</b>国内の注文システムは「ツール売り」（funfo無料〜、eEAT ¥1万〜）で、集客と成果の金額表示まで担う統合型がない</li>
+        <li><b>配達の壁も解消済み：</b>Uber Direct（配達代行API・1件ごとの距離別固定料金）が日本で利用可能。配達スタッフのいない店も35%を払わず配達だけ外注できる（Phase 2で連携）</li>
+        <li><b>価格優位：</b>Owner.comの¥75,000相当に対し、当社は¥29,800で日本のSMB価格帯に適合</li>
+      </ul>
+    </div>
+  </div>
+  <div class="foot"><span>直販オンライン注文システム MVP稟議</span><span>4 / 10</span></div>
+</div>
+
+<!-- ========== 5. 商品概要 ========== -->
+<div class="slide">
+  <div class="kicker">04｜商品概要</div>
+  <h2 class="slide-title">注文システムではなく「直販売上の成長」を売る</h2>
+  <div class="rule"></div>
+  <div class="arrow-flow">
+    <div class="flow-box"><div class="t">入口</div><div class="v">店のWEBサイト<br>+ MEO + SNS</div></div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box"><div class="t">注文</div><div class="v">スマホ注文ページ<br>テイクアウト/自店配達</div></div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box"><div class="t">決済・通知</div><div class="v">Stripe決済<br>LINEで店に通知</div></div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box"><div class="t">資産化</div><div class="v">顧客リスト蓄積<br>（店の資産に）</div></div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box" style="border-color:#8a4a12; border-width:0.5mm;"><div class="t">成果証明</div><div class="v">円建てダッシュボード<br>月次レポート</div></div>
+  </div>
+  <div class="cols">
+    <div class="col">
+      <div class="card">
+        <h4>成果ダッシュボード（本商品の魂）が毎月見せる数字</h4>
+        <p style="margin-top:1mm;">
+          ① 今月の直販売上 <b>¥312,400</b><br>
+          ② ポータル経由なら払っていた手数料 <b>¥109,340</b>（35%換算）<br>
+          ③ 実際のコスト <b>¥41,046</b>（月額+決済）<br>
+          ④ <span style="color:#8a4a12; font-weight:700;">→ 今月の節約額 ¥68,294</span>（前月比・累計付き）<br>
+          ⑤ 注文件数／客単価／新規・リピート比率／顧客リスト数
+        </p>
+      </div>
+    </div>
+    <div class="col">
+      <div class="card">
+        <h4>AI要素（既存AI商材ラインとの一貫性）</h4>
+        <p>・<b>AIメニュー作成支援</b>：料理写真からメニュー名・説明文・英語版を自動生成（MVP搭載）<br>
+        ・<b>AIレポートコメント</b>：月次成果レポートの所見を自動生成（MVP搭載）<br>
+        ・<b>AIリピート促進</b>：蓄積した顧客リストに休眠客の再注文をLINEで自動提案（Phase 2＝調査候補Bのエンジンを統合）</p>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>直販オンライン注文システム MVP稟議</span><span>5 / 10</span></div>
+</div>
+
+<!-- ========== 6. 差別化 ========== -->
+<div class="slide">
+  <div class="kicker">05｜競合と差別化</div>
+  <h2 class="slide-title">単体機能では戦わない。「集客→注文→成果証明」の統合で土俵を変える</h2>
+  <div class="rule"></div>
+  <table>
+    <thead>
+      <tr><th style="width:22%;"></th><th>国内の注文システム<br>（funfo・eEAT・Camel等）</th><th>デリバリーポータル<br>（Uber Eats・出前館）</th><th style="background:#f3ece3;">本商品<br>（オーダーマイスター）</th></tr>
+    </thead>
+    <tbody>
+      <tr><th>手数料</th><td>低い（ツール代のみ）</td><td class="bad">35〜40%</td><td class="win">月額固定+決済のみ</td></tr>
+      <tr><th>集客（サイト/MEO/SNS）</th><td class="bad">できない（ツール売り）</td><td>ポータル内の露出のみ</td><td class="win">当社の本業。セットで「注文が入る状態」まで作る</td></tr>
+      <tr><th>顧客情報</th><td>店に残る</td><td class="bad">店に渡さない</td><td class="win">店の資産に。Phase 2でAIリピート促進</td></tr>
+      <tr><th>成果の金額表示</th><td class="bad">なし</td><td>売上レポートのみ</td><td class="win">「節約額¥X」を毎月証明する専用ダッシュボード</td></tr>
+      <tr><th>営業チャネル</th><td>新規開拓が必要</td><td>—</td><td class="win">既存飲食クライアントへのアップセル（CACほぼゼロ）</td></tr>
+    </tbody>
+  </table>
+  <div class="money" style="margin-top:4mm;"><b>解約されない構造：</b>①売上（注文）が毎日流れるシステムは止められない ②節約額が毎月月額費を上回る ③サイト・MEOとのバンドルで複数商材契約 ④顧客リストという資産が蓄積し続ける</div>
+  <div class="foot"><span>直販オンライン注文システム MVP稟議</span><span>6 / 10</span></div>
+</div>
+
+<!-- ========== 7. MVPスコープ ========== -->
+<div class="slide">
+  <div class="kicker">06｜MVPスコープ</div>
+  <h2 class="slide-title">「注文が流れ、節約額が見える」ことの検証に徹する</h2>
+  <div class="rule"></div>
+  <div class="cols">
+    <div class="col">
+      <div class="card">
+        <h4>顧客側（店のお客様）</h4>
+        <p>・スマホ注文ページ（サイトから遷移/埋め込み）<br>・メニュー閲覧・オプション選択<br>・テイクアウト（日時指定）／自店配達（エリア・最低注文額・配達料）<br>・Stripeクレジット決済＋店頭払い<br>・ゲスト注文（会員登録不要）・注文確認通知</p>
+      </div>
+      <div class="card">
+        <h4>店舗側</h4>
+        <p>・メニュー管理＋<b>AIメニュー作成支援</b><br>・注文受信（管理画面＋LINE通知）・ステータス管理<br>・営業時間・時間枠・注文停止スイッチ<br>・<b>円建て成果ダッシュボード＋月次レポート自動生成</b><br>・顧客リスト蓄積</p>
+      </div>
+    </div>
+    <div class="col">
+      <div class="card">
+        <h4>MVPでやらないこと（Phase 2以降）</h4>
+        <p>・PayPay決済・LINEログイン/再注文<br>・Uber Direct連携（配達外注）<br>・AIリピート促進（休眠客掘り起こし）<br>・POS/レジ連携・独自アプリ・複数店舗管理・多言語</p>
+      </div>
+      <div class="card">
+        <h4>システム構成</h4>
+        <p>・Next.js（Vercel）＋ Supabase（リアルタイム通知・テナント分離）<br>・<b>Stripe Connect：売上は店舗口座に直接入金</b>（当社は資金を預からない＝資金決済法リスク回避）<br>・LINE Messaging API（店舗通知）・Claude API（AI機能）<br>・マルチテナント設計で店舗追加の限界費用ほぼゼロ</p>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>直販オンライン注文システム MVP稟議</span><span>7 / 10</span></div>
+</div>
+
+<!-- ========== 8. 価格と収益計画 ========== -->
+<div class="slide">
+  <div class="kicker">07｜価格と当社収益計画</div>
+  <h2 class="slide-title">既存顧客へのアップセルでCACほぼゼロのMRR積み上げ</h2>
+  <div class="rule"></div>
+  <div class="cols">
+    <div class="col">
+      <table>
+        <thead><tr><th>プラン</th><th>月額</th><th>内容</th></tr></thead>
+        <tbody>
+          <tr><th>スタンダード</th><td class="win">¥29,800</td><td>注文一式＋成果ダッシュボード＋月次レポート＋導入代行</td></tr>
+          <tr><th>ライト（検討）</th><td>¥14,800</td><td>テイクアウトのみ。小規模店の入口</td></tr>
+          <tr><th>決済手数料</th><td>実費3.6%</td><td>店舗負担（ポータル35%との対比で訴求）</td></tr>
+          <tr><th>初期費用</th><td>¥50,000〜</td><td>メニュー登録・写真調整・導線設置（キャンペーン無料可）</td></tr>
+        </tbody>
+      </table>
+      <p style="font-size:9pt; color:#55534c; line-height:1.65; margin-top:3mm;">サイトマイスター/MEOエージェントとのバンドル割引を設定し、「集客→注文」パッケージとして複数商材契約を促進。</p>
+    </div>
+    <div class="col">
+      <div class="card">
+        <h4>収益イメージ（スタンダード比率中心・保守的試算）</h4>
+        <table style="margin-top:2mm;">
+          <thead><tr><th></th><th>導入店舗</th><th>MRR</th><th>年間換算</th></tr></thead>
+          <tbody>
+            <tr><th>初年度</th><td class="num">20店舗</td><td class="num">¥596,000</td><td class="num">約¥7.2M</td></tr>
+            <tr><th>2年目</th><td class="num">60店舗</td><td class="num">¥1,788,000</td><td class="num">約¥21.5M</td></tr>
+          </tbody>
+        </table>
+        <p style="margin-top:2.5mm;">・営業原資：既存飲食クライアント＋新規サイト制作案件への同時提案<br>・マルチテナントSaaSのため店舗追加の限界費用はごく小さく、粗利率は高水準<br>・Phase 2（AIリピート促進・Uber Direct）でARPU増を計画</p>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>直販オンライン注文システム MVP稟議</span><span>8 / 10</span></div>
+</div>
+
+<!-- ========== 9. 開発・パイロット計画 ========== -->
+<div class="slide">
+  <div class="kicker">08｜開発・パイロット計画とGO/NO-GO基準</div>
+  <h2 class="slide-title">8週間で作り、90日で「節約額」を実証する</h2>
+  <div class="rule"></div>
+  <div class="cols">
+    <div class="col">
+      <table>
+        <thead><tr><th style="width:20%;">週</th><th>マイルストーン</th></tr></thead>
+        <tbody>
+          <tr><td class="num">W1-2</td><td>設計確定・DBスキーマ・Stripe Connect/LINE通知の技術検証</td></tr>
+          <tr><td class="num">W3-5</td><td>顧客側注文フロー・店舗側管理画面</td></tr>
+          <tr><td class="num">W6</td><td>AIメニュー作成支援・成果ダッシュボード・月次レポート</td></tr>
+          <tr><td class="num">W7</td><td>マルチテナント管理・結合テスト</td></tr>
+          <tr><td class="num">W8</td><td>パイロット店舗セットアップ・営業資料</td></tr>
+        </tbody>
+      </table>
+      <p style="font-size:9pt; color:#55534c; margin-top:2.5mm;">体制：開発1.5〜2名相当（約3人月）＋営業/CS兼務1名（パイロット期）</p>
+    </div>
+    <div class="col">
+      <div class="card">
+        <h4>パイロット（90日・3〜5店舗）のGO/NO-GO基準</h4>
+        <table style="margin-top:2mm;">
+          <thead><tr><th>KPI</th><th>目標</th></tr></thead>
+          <tbody>
+            <tr><th>店舗あたり月間直販売上</th><td>¥150,000以上（3ヶ月目）</td></tr>
+            <tr><th>「節約額＞月額費」達成店舗率</th><td class="win">80%以上</td></tr>
+            <tr><th>注文者リピート率（90日）</th><td>20%以上</td></tr>
+            <tr><th>有償継続意向</th><td>5店舗中4店舗以上</td></tr>
+          </tbody>
+        </table>
+        <p style="margin-top:2.5mm;">達成 → 本開発・本格展開へ。未達 → 原因分析のうえピボット（テイクアウト特化/業態変更）または撤退を判断。<b>撤退時も損失はMVP開発工数に限定</b>。</p>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>直販オンライン注文システム MVP稟議</span><span>9 / 10</span></div>
+</div>
+
+<!-- ========== 10. リスクと承認依頼 ========== -->
+<div class="slide last">
+  <div class="kicker">09｜リスクと承認依頼事項</div>
+  <h2 class="slide-title">リスクは限定済み。MVP開発着手の承認を依頼します</h2>
+  <div class="rule"></div>
+  <div class="cols">
+    <div class="col">
+      <table>
+        <thead><tr><th style="width:38%;">リスク</th><th>対応</th></tr></thead>
+        <tbody>
+          <tr><th>無料競合とのコモディティ化</th><td>集客+成果証明+AIの統合で土俵を変える</td></tr>
+          <tr><th>注文が入らない店の即解約</th><td>導入条件設定・MEO/SNSセット販売・利用低下検知でCS介入</td></tr>
+          <tr><th>資金決済法・特商法</th><td>Stripe Connectで店舗直接入金。特商法・キャンセル規定テンプレ整備</td></tr>
+          <tr><th>配達品質</th><td>MVPは近隣商圏限定。Phase 2でUber Direct併用</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="col">
+      <div class="thesis-box" style="margin-top:0;">
+        <div class="lbl">承認依頼事項</div>
+        <p>① MVP開発着手（8週間・約3人月）<br>② パイロット3〜5店舗への無償〜半額提供枠<br>③ 外部サービス利用（Stripe／Supabase／Vercel／LINE API／Claude API・月数万円規模）</p>
+      </div>
+      <p style="font-size:9.5pt; color:#55534c; line-height:1.7; margin-top:3mm;">
+        本商品は、制作単発売上から「クライアントの売上をつくる月額パートナー」への業態転換の第一歩であり、Phase 2以降（AIリピート促進・Uber Direct・LLMO）の共通基盤（顧客リスト・成果ダッシュボード）を兼ねる。
+      </p>
+    </div>
+  </div>
+  <div class="foot"><span>直販オンライン注文システム MVP稟議</span><span>10 / 10</span></div>
+</div>
+
+</body>
+</html>
