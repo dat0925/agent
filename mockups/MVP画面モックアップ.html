@@ -193,6 +193,9 @@
     margin-bottom: 12px;
   }
   .f-input:focus { outline: 2px solid #d94f2b; outline-offset: -1px; border-color: #d94f2b; }
+  .f-input.invalid { border-color: #c33d1a; background: #fdf6f3; }
+  .f-err { font-size: 11px; color: #c33d1a; margin: -8px 0 12px; line-height: 1.5; }
+  .cta-hint { font-size: 11px; color: #e8b5a0; text-align: center; margin: 0 0 8px; line-height: 1.5; }
   .pay-opt {
     display: flex; align-items: flex-start; gap: 10px;
     background: #fff; border: 1px solid #ddd6c9; border-radius: 12px;
@@ -396,11 +399,14 @@
               <div class="form-sec">
                 <p class="f-label">お名前<span class="req">必須</span></p>
                 <input class="f-input" id="fName" type="text" placeholder="例）山田 太郎" autocomplete="off">
+                <p class="f-err" id="errName" hidden>お名前を入力してください</p>
                 <p class="f-label">電話番号<span class="req">必須</span></p>
-                <input class="f-input" id="fTel" type="tel" placeholder="例）090-1234-5678" autocomplete="off">
+                <input class="f-input" id="fTel" type="tel" inputmode="tel" placeholder="例）090-1234-5678" autocomplete="off">
+                <p class="f-err" id="errTel" hidden>電話番号は数字10〜11桁で入力してください（例：090-1234-5678）</p>
                 <div id="addrBlock" style="display:none;">
                   <p class="f-label">お届け先住所<span class="req">必須</span></p>
                   <input class="f-input" id="fAddr" type="text" placeholder="例）中央区上町1-2-3" autocomplete="off">
+                  <p class="f-err" id="errAddr" hidden>お届け先住所を入力してください</p>
                 </div>
                 <p class="f-label">お支払い方法</p>
                 <label class="pay-opt on" id="payCard">
@@ -419,6 +425,7 @@
               </div>
             </div>
             <div class="bottom-bar">
+              <p class="cta-hint" id="ctaHint">お名前と電話番号を入力すると確定できます</p>
               <button class="cta center" id="confirmBtn" disabled>注文を確定する<span class="c-total" id="confirmTotal"></span></button>
             </div>
           </div>
@@ -621,12 +628,40 @@
     document.getElementById('confirmTotal').textContent = yen(total());
     validateInfo();
   }
-  function validateInfo() {
-    var ok = fName.value.trim().length > 0 && fTel.value.trim().length >= 10;
-    if (mode === 'delivery') ok = ok && fAddr.value.trim().length > 0;
-    document.getElementById('confirmBtn').disabled = !ok;
+  var touched = { name: false, tel: false, addr: false };
+  function telOk() {
+    var d = fTel.value.replace(/\D/g, '');
+    return d.length >= 10 && d.length <= 11;
   }
-  [fName, fTel, fAddr].forEach(function (el) { el.addEventListener('input', validateInfo); });
+  function validateInfo() {
+    var nameOk = fName.value.trim().length > 0;
+    var tOk = telOk();
+    var addrOk = mode !== 'delivery' || fAddr.value.trim().length > 0;
+
+    document.getElementById('errName').hidden = !(touched.name && !nameOk);
+    fName.classList.toggle('invalid', touched.name && !nameOk);
+    document.getElementById('errTel').hidden = !(touched.tel && !tOk);
+    fTel.classList.toggle('invalid', touched.tel && !tOk);
+    document.getElementById('errAddr').hidden = !(touched.addr && !addrOk);
+    fAddr.classList.toggle('invalid', touched.addr && !addrOk);
+
+    var ok = nameOk && tOk && addrOk;
+    document.getElementById('confirmBtn').disabled = !ok;
+    var hint = document.getElementById('ctaHint');
+    if (ok) {
+      hint.hidden = true;
+    } else {
+      hint.hidden = false;
+      var missing = [];
+      if (!nameOk) missing.push('お名前');
+      if (!tOk) missing.push('電話番号（数字10〜11桁）');
+      if (!addrOk) missing.push('お届け先住所');
+      hint.textContent = missing.join('・') + ' を入力すると確定できます';
+    }
+  }
+  fName.addEventListener('input', function () { touched.name = true; validateInfo(); });
+  fTel.addEventListener('input', function () { touched.tel = true; validateInfo(); });
+  fAddr.addEventListener('input', function () { touched.addr = true; validateInfo(); });
 
   var payCard = document.getElementById('payCard'), payStore = document.getElementById('payStore');
   [payCard, payStore].forEach(function (opt) {
@@ -691,6 +726,8 @@
   document.getElementById('resetBtn').addEventListener('click', function () {
     cart = {};
     fName.value = ''; fTel.value = ''; fAddr.value = ''; document.getElementById('fNote').value = '';
+    touched = { name: false, tel: false, addr: false };
+    validateInfo();
     updateMenuBar();
     go('vMenu');
   });
