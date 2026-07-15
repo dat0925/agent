@@ -228,6 +228,46 @@
   .receipt .r-row.total { border-top: 1px solid #f0ebe0; margin-top: 6px; padding-top: 8px; font-size: 13px; }
   .done-note { font-size: 11px; color: #9a9488; margin: 0 22px; line-height: 1.7; }
 
+  /* ---- chat widget ---- */
+  .chatw {
+    width: 370px; flex-shrink: 0; height: 600px;
+    display: flex; flex-direction: column;
+    border-radius: 16px; overflow: hidden; background: #fff;
+    border: 1px solid var(--hairline); box-shadow: 0 14px 36px rgba(20,15,8,0.14);
+  }
+  .cw-head { background: #201d1a; color: #f5efe6; padding: 12px 16px; display: flex; gap: 10px; align-items: center; }
+  .cw-avatar {
+    width: 34px; height: 34px; border-radius: 50%; background: #d94f2b;
+    display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0;
+  }
+  .cw-name { font-size: 13px; font-weight: 700; }
+  .cw-sub { font-size: 10px; color: #c9bfae; }
+  .cw-msgs { flex: 1; overflow-y: auto; padding: 14px; background: #faf7f2; display: flex; flex-direction: column; gap: 10px; }
+  .cmsg { max-width: 84%; padding: 10px 13px; border-radius: 14px; font-size: 12.5px; line-height: 1.7; }
+  .cmsg.ai { background: #fff; border: 1px solid #eae4d8; border-top-left-radius: 4px; align-self: flex-start; color: #201d1a; }
+  .cmsg.me { background: #d94f2b; color: #fff; border-top-right-radius: 4px; align-self: flex-end; }
+  .cmsg .cbtns { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
+  .cbtn {
+    font-size: 11.5px; font-weight: 700; border: 1px solid #d94f2b; color: #d94f2b;
+    background: #fff; border-radius: 8px; padding: 6px 10px; cursor: pointer; font-family: inherit;
+  }
+  .cbtn.pri { background: #d94f2b; color: #fff; }
+  .typing { display: inline-flex; gap: 3px; padding: 3px 2px; }
+  .typing i { width: 5px; height: 5px; border-radius: 50%; background: #b3aca0; animation: tblink 1s infinite; }
+  .typing i:nth-child(2) { animation-delay: 0.15s; }
+  .typing i:nth-child(3) { animation-delay: 0.3s; }
+  @keyframes tblink { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
+  .cw-chips { display: flex; gap: 6px; padding: 8px 12px; overflow-x: auto; background: #faf7f2; border-top: 1px solid #eee7da; }
+  .chip {
+    flex-shrink: 0; font-size: 11px; font-weight: 600; color: #55514a;
+    border: 1px solid #ddd6c9; background: #fff; border-radius: 999px; padding: 5px 11px;
+    cursor: pointer; font-family: inherit;
+  }
+  .cw-input { display: flex; gap: 8px; padding: 10px 12px; background: #fff; border-top: 1px solid #eae4d8; }
+  .cw-input input { flex: 1; border: 1px solid #ddd6c9; border-radius: 999px; padding: 9px 14px; font-size: 12.5px; font-family: inherit; color: #201d1a; }
+  .cw-input input:focus { outline: 2px solid #d94f2b; outline-offset: -1px; }
+  .cw-send { border: none; background: #d94f2b; color: #fff; border-radius: 999px; padding: 0 16px; font-weight: 700; cursor: pointer; font-family: inherit; font-size: 12.5px; }
+
   /* ---- LINE notify ---- */
   .line-card {
     width: 340px; border-radius: 16px; overflow: hidden; flex-shrink: 0;
@@ -262,7 +302,7 @@
 <div class="shell">
   <p class="eyebrow">オーダーマイスター（仮称）｜MVP注文体験モック</p>
   <h1>メニュー選択から注文完了まで、実際に操作できるデモ</h1>
-  <p class="intro">手数料ゼロの直販注文フローを体験できます。スマホ画面で商品を追加し、カート → お客様情報 → 注文確定まで進めてください。<b>注文を確定すると、下の「店舗のLINE通知」にリアルタイムで通知が追加されます。</b>データはすべて架空のサンプル店舗「からあげ・お弁当 まる福」のものです。</p>
+  <p class="intro">手数料ゼロの直販注文フローを体験できます。スマホ画面で商品を追加し、カート → お客様情報 → 注文確定まで進めてください。<b>注文を確定すると、下の「店舗のLINE通知」にリアルタイムで通知が追加されます。</b>画面2のAIチャットコンシェルジュでは、会話で注文するとカートに商品が入り、GUIフローへ引き渡されます。データはすべて架空のサンプル店舗「からあげ・お弁当 まる福」のものです。</p>
   <p class="meta">要件定義書 docs/03 の機能ID（C1〜C7・S3）に対応 ｜ 2026-07-14 ｜ 社内レビュー・営業デモ用</p>
 
   <!-- ============ 注文フロー ============ -->
@@ -459,10 +499,44 @@
     </div>
   </section>
 
+  <!-- ============ チャットコンシェルジュ ============ -->
+  <section>
+    <h2>画面2｜拡張提案：AIチャットコンシェルジュ（サイト埋め込みウィジェット）</h2>
+    <p class="sec-sub">チャットは注文の「代替」ではなく「案内係」。注文の意図を検知するとカートへ入れて画面1のGUIに引き渡します（Phase 2候補・営業デモ用）</p>
+    <div class="stage">
+      <div class="chatw">
+        <div class="cw-head">
+          <div class="cw-avatar">🍗</div>
+          <div>
+            <div class="cw-name">まる福 AIコンシェルジュ</div>
+            <div class="cw-sub">24時間受付 ｜ 店のサイト右下に表示されるウィジェットの展開状態</div>
+          </div>
+        </div>
+        <div class="cw-msgs" id="cwMsgs"></div>
+        <div class="cw-chips">
+          <button class="chip">からあげ弁当を2つ</button>
+          <button class="chip">アレルギー対応は？</button>
+          <button class="chip">20人分の弁当を頼みたい</button>
+          <button class="chip">駐車場はある？</button>
+        </div>
+        <div class="cw-input">
+          <input id="cwInput" type="text" placeholder="メッセージを入力…" aria-label="チャットメッセージ">
+          <button class="cw-send" id="cwSend">送信</button>
+        </div>
+      </div>
+      <div class="annos">
+        <div class="anno"><span class="a-tag">設計思想</span><h4>チャット＝案内係、GUI＝決済</h4><p>注文の意図を検知したら「カートに入れて注文へ進む」で画面1のカートへ引き渡し。金額・時間・住所の確定は誤解の起きないGUI側で行う。チャットで注文を完結させない設計です。</p></div>
+        <div class="anno"><span class="a-tag">例外処理</span><h4>GUIが受けられない相談を24時間受ける</h4><p>大口・ケータリング・アレルギー確認など、これまで電話しか受け皿がなかった高単価の相談をAIが受けて店主のLINEへ転送（このデモでも画面3に実際に届きます）。</p></div>
+        <div class="anno"><span class="a-tag">Phase 2</span><h4>同じ会話AIをLINE公式アカウントへ</h4><p>ウェブのチャットは匿名ですが、LINE上なら会話した相手がそのまま顧客リストになり、AI掘り起こし（再注文促進）に合流。会話エンジンは共通化できます。</p></div>
+        <div class="anno"><span class="a-tag">営業デモ</span><h4>「AIが接客する」画は決裁者に刺さる</h4><p>MVPの主フローはGUIのまま。チャットはプロダクトの脇役でも、営業資材としては主役級として活用します。</p></div>
+      </div>
+    </div>
+  </section>
+
   <!-- ============ LINE通知 ============ -->
   <section>
-    <h2>画面2｜店舗への注文通知（LINE）</h2>
-    <p class="sec-sub">上のスマホで注文を確定すると、ここに通知がリアルタイムで追加されます（S3）</p>
+    <h2>画面3｜店舗への注文通知（LINE）</h2>
+    <p class="sec-sub">画面1で注文を確定、または画面2で相談すると、ここに通知がリアルタイムで追加されます（S3）</p>
     <div class="stage">
       <div class="line-card">
         <div class="lc-head">オーダーマイスター 通知</div>
@@ -731,6 +805,141 @@
     updateMenuBar();
     go('vMenu');
   });
+
+  /* ---------- chat concierge (画面2) ---------- */
+  var cwMsgs = document.getElementById('cwMsgs');
+  var cwInput = document.getElementById('cwInput');
+  var chatState = null;
+  var REDUCED = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var CHAT_MENU = [
+    { id: 'karaage-ben', name: '特製からあげ弁当', price: 880, re: /からあげ弁当|唐揚げ弁当|から揚げ弁当/ },
+    { id: 'karaage-10', name: 'からあげ単品10個', price: 1180, re: /からあげ単品|唐揚げ単品|単品/ },
+    { id: 'omusubi', name: '日替わりおむすびセット', price: 580, re: /おむすび|おにぎり/ },
+    { id: 'saba', name: 'サバの塩焼き弁当', price: 980, re: /サバ|さば|鯖/ },
+    { id: 'lemonade', name: '自家製レモネード', price: 350, re: /レモネード|ジュース/ }
+  ];
+
+  function cwSay(role, content, asText) {
+    var el = document.createElement('div');
+    el.className = 'cmsg ' + role;
+    if (asText) el.textContent = content; else el.innerHTML = content;
+    cwMsgs.appendChild(el);
+    cwMsgs.scrollTop = cwMsgs.scrollHeight;
+    return el;
+  }
+  function cwAI(html, cb) {
+    var t = cwSay('ai', '<span class="typing"><i></i><i></i><i></i></span>');
+    setTimeout(function () {
+      t.innerHTML = html;
+      cwMsgs.scrollTop = cwMsgs.scrollHeight;
+      if (cb) cb(t);
+    }, REDUCED ? 0 : 700);
+  }
+  function cwButtons(el, defs) {
+    var wrap = document.createElement('div');
+    wrap.className = 'cbtns';
+    defs.forEach(function (d) {
+      var b = document.createElement('button');
+      b.className = 'cbtn' + (d.pri ? ' pri' : '');
+      b.textContent = d.label;
+      b.addEventListener('click', function () {
+        wrap.querySelectorAll('.cbtn').forEach(function (x) { x.disabled = true; x.style.opacity = 0.5; });
+        d.fn();
+      });
+      wrap.appendChild(b);
+    });
+    el.appendChild(wrap);
+    cwMsgs.scrollTop = cwMsgs.scrollHeight;
+  }
+  function zenToHan(s) {
+    return s.replace(/[０-９]/g, function (c) { return String.fromCharCode(c.charCodeAt(0) - 65248); });
+  }
+  var KANJI_NUM = { '一': 1, '二': 2, '三': 3, '四': 4, '五': 5, '六': 6, '七': 7, '八': 8, '九': 9, '十': 10 };
+  function parseQty(t) {
+    var m = t.match(/([0-9]+)/);
+    if (m) return parseInt(m[1], 10);
+    for (var k in KANJI_NUM) { if (t.indexOf(k + 'つ') >= 0 || t.indexOf(k + '個') >= 0) return KANJI_NUM[k]; }
+    if (/ふたつ/.test(t)) return 2;
+    return 1;
+  }
+  function sendToStoreLine(kind, text) {
+    var bubble = document.createElement('div');
+    bubble.className = 'bubble fresh';
+    bubble.innerHTML =
+      '<div class="b-from">オーダーマイスター ｜ ' + nowHM() + '</div>' +
+      '<b class="o-head">💬 チャットからのご相談（' + kind + '）</b><br>' +
+      '「' + text.replace(/</g, '&lt;') + '」' +
+      '<div class="b-btns"><span class="b-btn pri">返信する</span><span class="b-btn">あとで</span></div>';
+    var body = document.getElementById('lineBody');
+    body.insertBefore(bubble, body.firstChild);
+  }
+  function handleChat(text) {
+    var raw = text.trim();
+    if (!raw) return;
+    cwSay('me', raw, true);
+
+    if (chatState === 'consult') {
+      chatState = null;
+      sendToStoreLine('大口・ご相談', raw);
+      cwAI('承知しました。お店に相談内容をお送りしました📨 店主から折り返しご連絡します。<br><span style="color:#8b857a; font-size:11px;">（デモ：画面3の店舗LINEにいま届きました）</span>');
+      return;
+    }
+
+    var t = zenToHan(raw);
+    var qty = parseQty(t);
+
+    if (/大口|ケータリング|団体|パーティ/.test(t) || (/人分|人前/.test(t) && qty >= 10)) {
+      chatState = 'consult';
+      cwAI('ありがとうございます！大口・ケータリングのご注文はお店が直接承ります。<b>ご希望の日時・数量・ご予算</b>を教えてください。');
+      return;
+    }
+    if (/アレルギ/.test(t)) {
+      cwAI('からあげ・お弁当には<b>小麦・卵・大豆</b>を使用しています。詳しい原材料は店主が直接ご案内できますので、気になる食材があれば教えてください。', function (el) {
+        cwButtons(el, [
+          { label: '店主に確認したい', pri: true, fn: function () { chatState = 'consult'; cwAI('確認したい内容をどうぞ。そのまま店主にお送りします。'); } },
+          { label: 'わかりました', fn: function () { cwAI('他にご質問があればいつでもどうぞ🍗'); } }
+        ]);
+      });
+      return;
+    }
+    if (/駐車/.test(t)) { cwAI('はい、店舗前に<b>2台分</b>の駐車スペースがあります。満車の際は隣のコインパーキング（1時間¥200）をご利用ください。'); return; }
+    if (/営業|何時|やって/.test(t)) { cwAI('本日の営業時間は<b>11:00〜20:00</b>です（ラストオーダー19:30）。'); return; }
+    if (/配達|デリバリ|届け/.test(t)) { cwAI('上町・中町・本町エリアへお店のスタッフが配達します（配達料¥300・最低注文額¥1,500）。画面1の「デリバリー」タブからご注文いただけます。'); return; }
+
+    var hit = null;
+    for (var i = 0; i < CHAT_MENU.length; i++) { if (CHAT_MENU[i].re.test(t)) { hit = CHAT_MENU[i]; break; } }
+    if (hit) {
+      var q = Math.min(qty, 20);
+      cwAI(hit.name + ' <b>×' + q + '</b>（' + yen(hit.price * q) + '）ですね。カートに入れますか？', function (el) {
+        cwButtons(el, [
+          { label: 'カートに入れて注文へ進む', pri: true, fn: function () {
+              if (!cart[hit.id]) cart[hit.id] = { name: hit.name, price: hit.price, qty: 0 };
+              cart[hit.id].qty += q;
+              updateMenuBar();
+              renderCart();
+              go('vCart');
+              cwAI('カートに入れました！受け取り時間と数量は<b>画面1のスマホ</b>で確認・確定してください ↑');
+              document.querySelector('.phone').scrollIntoView({ behavior: REDUCED ? 'auto' : 'smooth', block: 'center' });
+            } },
+          { label: 'やめておく', fn: function () { cwAI('かしこまりました。他にご用があればどうぞ！'); } }
+        ]);
+      });
+      return;
+    }
+
+    cwAI('すみません、うまく汲み取れませんでした🙏 例えばこんなことができます：<br>・「からあげ弁当を2つ」（ご注文）<br>・「アレルギー対応は？」<br>・「20人分の弁当を頼みたい」<br>・「駐車場はある？」');
+  }
+
+  document.getElementById('cwSend').addEventListener('click', function () {
+    handleChat(cwInput.value); cwInput.value = '';
+  });
+  cwInput.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') { handleChat(cwInput.value); cwInput.value = ''; }
+  });
+  document.querySelectorAll('.chip').forEach(function (c) {
+    c.addEventListener('click', function () { handleChat(c.textContent); });
+  });
+  cwAI('こんにちは！まる福のAIコンシェルジュです🍗 ご注文もご質問もどうぞ。「からあげ弁当を2つ」のように話しかけてください。');
 
   updateMenuBar();
 })();
