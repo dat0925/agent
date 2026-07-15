@@ -303,7 +303,7 @@
   <p class="eyebrow">オーダーマイスター（仮称）｜MVP注文体験モック</p>
   <h1>メニュー選択から注文完了まで、実際に操作できるデモ</h1>
   <p class="intro">手数料ゼロの直販注文フローを体験できます。スマホ画面で商品を追加し、カート → お客様情報 → 注文確定まで進めてください。<b>注文を確定すると、下の「店舗のLINE通知」にリアルタイムで通知が追加されます。</b>画面2のAIチャットコンシェルジュでは、会話で注文するとカートに商品が入り、GUIフローへ引き渡されます。データはすべて架空のサンプル店舗「からあげ・お弁当 まる福」のものです。</p>
-  <p class="meta">要件定義書 docs/03 の機能ID（C1〜C7・S3）に対応 ｜ 2026-07-14 ｜ 社内レビュー・営業デモ用</p>
+  <p class="meta">要件定義書 docs/03 の機能ID（C1〜C7・S3）に対応 ｜ 2026-07-14</p>
 
   <!-- ============ 注文フロー ============ -->
   <section>
@@ -438,14 +438,14 @@
             <div class="scroll">
               <div class="form-sec">
                 <p class="f-label">お名前<span class="req">必須</span></p>
-                <input class="f-input" id="fName" type="text" placeholder="例）山田 太郎" autocomplete="off">
+                <input class="f-input" id="fName" type="text" value="山田 太郎" placeholder="例）山田 太郎" autocomplete="off">
                 <p class="f-err" id="errName" hidden>お名前を入力してください</p>
                 <p class="f-label">電話番号<span class="req">必須</span></p>
-                <input class="f-input" id="fTel" type="tel" inputmode="tel" placeholder="例）090-1234-5678" autocomplete="off">
+                <input class="f-input" id="fTel" type="tel" inputmode="tel" value="090-1234-5678" placeholder="例）090-1234-5678" autocomplete="off">
                 <p class="f-err" id="errTel" hidden>電話番号は数字10〜11桁で入力してください（例：090-1234-5678）</p>
                 <div id="addrBlock" style="display:none;">
                   <p class="f-label">お届け先住所<span class="req">必須</span></p>
-                  <input class="f-input" id="fAddr" type="text" placeholder="例）中央区上町1-2-3" autocomplete="off">
+                  <input class="f-input" id="fAddr" type="text" value="中央区上町1-2-3" placeholder="例）中央区上町1-2-3" autocomplete="off">
                   <p class="f-err" id="errAddr" hidden>お届け先住所を入力してください</p>
                 </div>
                 <p class="f-label">お支払い方法</p>
@@ -493,7 +493,7 @@
       <div class="annos">
         <div class="anno"><span class="a-tag">STEP 1｜C1〜C4</span><h4>メニュー選択</h4><p>テイクアウト/デリバリーの切替と時間枠の選択。「＋」で商品を追加するとカートバーが更新されます。デリバリーは配達料¥300・最低注文額¥1,500が自動適用。</p></div>
         <div class="anno"><span class="a-tag">STEP 2</span><h4>カート確認</h4><p>数量の増減・削除、受け取り方法の変更。合計金額をここで確定します。</p></div>
-        <div class="anno"><span class="a-tag">STEP 3｜C5・C7</span><h4>お客様情報（ゲスト注文）</h4><p>会員登録なし・名前と電話番号だけ。支払いはStripe事前決済または店頭払い。実装では売上が店舗のStripeアカウントへ直接入金されます。</p></div>
+        <div class="anno"><span class="a-tag">STEP 3｜C5・C7</span><h4>お客様情報（ゲスト注文）</h4><p>会員登録なし・名前と電話番号だけ。未入力の項目はエラー文とボタン上のヒントで案内します。支払いはStripe事前決済または店頭払い（売上は店舗のStripeアカウントへ直接入金）。このデモではサンプルのお客様情報を入力済みにしています。</p></div>
         <div class="anno"><span class="a-tag">STEP 4｜C6</span><h4>注文完了</h4><p>注文番号と受け取り時間を表示。確定と同時に、下の店舗LINEへ通知が飛びます（このデモでも実際に追加されます）。</p></div>
       </div>
     </div>
@@ -502,7 +502,7 @@
   <!-- ============ チャットコンシェルジュ ============ -->
   <section>
     <h2>画面2｜拡張提案：AIチャットコンシェルジュ（サイト埋め込みウィジェット）</h2>
-    <p class="sec-sub">チャットは注文の「代替」ではなく「案内係」。注文の意図を検知するとカートへ入れて画面1のGUIに引き渡します（Phase 2候補・営業デモ用）</p>
+    <p class="sec-sub">チャットは注文の「代替」ではなく「案内係」。注文の意図を検知するとカートへ入れて画面1のGUIに引き渡します（Phase 2候補）</p>
     <div class="stage">
       <div class="chatw">
         <div class="cw-head">
@@ -528,7 +528,7 @@
         <div class="anno"><span class="a-tag">設計思想</span><h4>チャット＝案内係、GUI＝決済</h4><p>注文の意図を検知したら「カートに入れて注文へ進む」で画面1のカートへ引き渡し。金額・時間・住所の確定は誤解の起きないGUI側で行う。チャットで注文を完結させない設計です。</p></div>
         <div class="anno"><span class="a-tag">例外処理</span><h4>GUIが受けられない相談を24時間受ける</h4><p>大口・ケータリング・アレルギー確認など、これまで電話しか受け皿がなかった高単価の相談をAIが受けて店主のLINEへ転送（このデモでも画面3に実際に届きます）。</p></div>
         <div class="anno"><span class="a-tag">Phase 2</span><h4>同じ会話AIをLINE公式アカウントへ</h4><p>ウェブのチャットは匿名ですが、LINE上なら会話した相手がそのまま顧客リストになり、AI掘り起こし（再注文促進）に合流。会話エンジンは共通化できます。</p></div>
-        <div class="anno"><span class="a-tag">営業デモ</span><h4>「AIが接客する」画は決裁者に刺さる</h4><p>MVPの主フローはGUIのまま。チャットはプロダクトの脇役でも、営業資材としては主役級として活用します。</p></div>
+        <div class="anno"><span class="a-tag">導入形態</span><h4>既存サイトにタグ1行で設置</h4><p>店舗の既存ホームページを作り替えずに、埋め込みタグの追加だけでウィジェットを設置できる形式を想定。MVPの主フローはGUI（画面1）のまま、チャットは追加オプションとして提供します。</p></div>
       </div>
     </div>
   </section>
@@ -799,7 +799,8 @@
   /* ---------- reset ---------- */
   document.getElementById('resetBtn').addEventListener('click', function () {
     cart = {};
-    fName.value = ''; fTel.value = ''; fAddr.value = ''; document.getElementById('fNote').value = '';
+    fName.value = '山田 太郎'; fTel.value = '090-1234-5678'; fAddr.value = '中央区上町1-2-3';
+    document.getElementById('fNote').value = '';
     touched = { name: false, tel: false, addr: false };
     validateInfo();
     updateMenuBar();
